@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": 0,
+    "testing-library/no-unnecessary-act": 0,
+    "import/no-anonymous-default-export": "off",
+    "testing-library/prefer-presence-queries": 0,
+    "testing-library/no-node-access": 0,
+    "testing-library/no-render-in-setup": 0,
+    "semi": [
+      "warn",
+      "always"
+    ],
+    "quotes": [
+      "warn",
+      "double"
+    ],
+    "no-console": ["warn", { "allow": ["error"] }],
+    "max-len": [
+      "warn",
+      {
+        "code": 120
+      }
+    ],
+    "prettier/prettier": 1 // Means error
+  }
+}
