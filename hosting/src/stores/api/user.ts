@@ -1,7 +1,5 @@
 import { api } from ".";
 
-import { ScoreModel } from "$shared/models/score";
-
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
     signUp: builder.mutation<string, { email: string; password: string }>({
@@ -13,21 +11,6 @@ const extendedApi = api.injectEndpoints({
           password
         }
       })
-    }),
-    getUserScores: builder.query<ScoreModel[], void>({
-      query: () => ({
-        url: "/user/scores",
-        method: "get"
-      })
-    }),
-    addScore: builder.mutation<string, number>({
-      query: (score) => ({
-        url: "/user/scores",
-        method: "post",
-        data: {
-          score
-        }
-      })
     })
   }),
   overrideExisting: false
@@ -35,4 +18,4 @@ const extendedApi = api.injectEndpoints({
 
 export default extendedApi;
 
-export const { useGetUserScoresQuery, useSignUpMutation, useAddScoreMutation } = extendedApi;
+export const { useSignUpMutation } = extendedApi;
