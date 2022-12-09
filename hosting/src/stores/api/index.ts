@@ -17,21 +17,22 @@ const axiosBaseQuery =
   > =>
   async ({ url, method, data, params }) => {
     try {
-      const result = await axios({ url: baseUrl + url, method, data, params });
+      // console.log(baseUrl, url)
+      const result = await axios({ url, method, data, params });
       if ("error" in result) {
         return {
-          error: (result as any).error
+          error: (result as any).error,
         };
       }
 
       return { data: result.data };
     } catch (axiosError) {
-      let err = axiosError as AxiosError;
+      const err = axiosError as AxiosError;
       return {
         error: {
           status: err.response?.status,
-          data: err.response?.data || err.message
-        }
+          data: err.response?.data || err.message,
+        },
       };
     }
   };
@@ -39,8 +40,8 @@ const axiosBaseQuery =
 export const api = createApi({
   reducerPath: "api",
   baseQuery: axiosBaseQuery({
-    baseUrl: process.env.REACT_APP_PUBLIC_API_URL!
+    baseUrl: process.env.REACT_APP_PUBLIC_API_URL!,
   }),
   tagTypes: ["auth"],
-  endpoints: (builder) => ({})
+  endpoints: (builder) => ({}),
 });

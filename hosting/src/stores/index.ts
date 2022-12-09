@@ -5,9 +5,10 @@ import { api } from "./api";
 
 const store = configureStore({
   reducer: {
-    [api.reducerPath]: api.reducer
+    [api.reducerPath]: api.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware)
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(api.middleware),
 });
 
 setupListeners(store.dispatch);

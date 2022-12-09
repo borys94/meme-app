@@ -3,7 +3,6 @@ import { createTheme } from "@mui/material/styles";
 import typography from "./base/typography";
 import palette from "./base/palette";
 
-
 const theme = createTheme({
   typography: { ...typography },
   palette: { ...palette },

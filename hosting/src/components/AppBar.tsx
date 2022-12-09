@@ -115,15 +115,13 @@ function ResponsiveAppBar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {isAdmin && (
+              <Link href="/admin" passHref>
+                <Button sx={{ my: 2, color: "white", display: "block" }}>
+                  Admin
+                </Button>
+              </Link>
+            )}
           </Box>
           {user ? (
             <Box sx={{ flexGrow: 0 }}>
@@ -147,6 +145,13 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <Link href="/profile" passHref>
+                  <MenuItem>
+                    {/* Profile */}
+
+                    <Typography textAlign="center">Profile</Typography>
+                  </MenuItem>
+                </Link>
                 <MenuItem onClick={handleSignOut}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>

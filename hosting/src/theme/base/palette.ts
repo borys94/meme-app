@@ -13,6 +13,9 @@ export default {
   },
   text: {
     primary: "#333",
-    secondary: "#bbb",
+    secondary: "#999",
+  },
+  background: {
+    default: "#fafafa",
   },
 };

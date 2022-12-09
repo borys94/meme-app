@@ -11,23 +11,40 @@ import {currentUser} from "./middlewares/currentUser";
 import {errorHandler} from "./middlewares/errorHandler";
 
 // import {setUserRole} from "./routes/admin/setUserRole";
-// import {getUsers} from "./routes/admin/getUsers";
+import {updateUser} from "./routes/admin/updateUser";
+import {addTemplateRouter} from "./routes/admin/addTemplate";
 
 const app = express();
 
 app.use(json());
+// app.use(bodyParser.text({type: '/'}));
 app.use(cors({
   origin: true,
 }));
 
 app.use(currentUser);
 
+app.use("/admin", addTemplateRouter);
+
+
+// const upload = multer({
+//   dest: 'uploads/'
+// });
+// app.post('/admin/templates', upload.single("image"), (req, res) => {
+//   // const {fileBase64, title} = req.body;
+//   console.log("-----------")
+//   console.log(req.file)
+// })
+
+
 app.get("/status", (req, res) => {
   res.sendStatus(200);
 });
 
 // app.get("/admin/setUserRole", setUserRole);
-// app.get("/admin/users", getUsers);
+app.post("/admin/users/:uid", updateUser);
+
+// app.post("/admin/templates", addTemplate);
 
 app.post("/auth/signUp", signUp);
 

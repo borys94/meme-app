@@ -8,12 +8,12 @@ const extendedApi = api.injectEndpoints({
         method: "post",
         data: {
           email,
-          password
-        }
-      })
-    })
+          password,
+        },
+      }),
+    }),
   }),
-  overrideExisting: false
+  overrideExisting: false,
 });
 
 export default extendedApi;

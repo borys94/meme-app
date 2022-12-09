@@ -1,7 +1,7 @@
 export interface UserModel {
   uid: string;
   email: string;
-  createdAt: string;
+  createdAt: number;
   role: USER_ROLES;
 }
 

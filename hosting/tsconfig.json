@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -15,10 +15,15 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types", "../shared/models/*"],
+    
     "paths": {
       "@components/*": ["src/components/*"],
       "@services/*": ["src/services/*"],
       "@stores/*": ["src/stores/*"],
+      "@shared/*": ["../shared/*"],
+      "@models/*": ["../shared/models/*"],
+      "@utils/*": ["src/utils/*"],
     },
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
