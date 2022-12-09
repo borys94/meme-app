@@ -117,7 +117,11 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {isAdmin && (
               <Link href="/admin" passHref>
-                <Button sx={{ my: 2, color: "white", display: "block" }}>
+                <Button
+                  size="large"
+                  color="warning"
+                  sx={{ my: 2, ml: 2, fontWeight: "bold" }}
+                >
                   Admin
                 </Button>
               </Link>

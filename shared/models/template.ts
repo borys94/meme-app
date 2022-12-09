@@ -1,7 +1,12 @@
 export interface TemplateModel {
   uid: string;
-  private: boolean;
+  status: TEMPLATE_STATUS;
   title: string;
   url: string;
   createdAt: number;
+}
+
+export enum TEMPLATE_STATUS {
+  PUBLISHED = "published",
+  UNPUBLISHED = "unpublished"
 }

@@ -11,6 +11,9 @@ export default {
   error: {
     main: "#D2372D",
   },
+  warning: {
+    main: "#c46b28",
+  },
   text: {
     primary: "#333",
     secondary: "#999",

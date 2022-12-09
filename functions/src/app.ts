@@ -10,9 +10,9 @@ import {signUp} from "./routes/auth/signUp";
 import {currentUser} from "./middlewares/currentUser";
 import {errorHandler} from "./middlewares/errorHandler";
 
-// import {setUserRole} from "./routes/admin/setUserRole";
+import {addFavouriteRouter} from "./routes/users/addFavourite";
 import {updateUser} from "./routes/admin/updateUser";
-import {addTemplateRouter} from "./routes/admin/addTemplate";
+import {adminTemplatesRouter} from "./routes/admin/templates";
 
 const app = express();
 
@@ -24,7 +24,8 @@ app.use(cors({
 
 app.use(currentUser);
 
-app.use("/admin", addTemplateRouter);
+app.use("/admin", adminTemplatesRouter);
+app.use("/users", addFavouriteRouter);
 
 
 // const upload = multer({

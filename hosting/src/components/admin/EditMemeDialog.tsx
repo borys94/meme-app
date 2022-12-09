@@ -14,48 +14,27 @@ import Checkbox from "@mui/material/Checkbox";
 
 import CloseDialogButton from "@components/CloseDialogButton";
 import LoaderButton from "@components/LoaderButton";
-import { useAddTemplateMutation } from "@stores/api/admin";
-import { TEMPLATE_STATUS } from "@shared/models/template";
-
-const toBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
+import { useEditTemplateMutation } from "@stores/api/admin";
+import { TemplateModel, TEMPLATE_STATUS } from "@shared/models/template";
 
 interface Props {
   open: boolean;
   handleClose: () => void;
+  template: TemplateModel | null;
 }
 
-const AddMemeDialog = ({ open, handleClose }: Props) => {
+const EditMemeDialog = ({ open, template, handleClose }: Props) => {
   const [status, setStatus] = useState<TEMPLATE_STATUS>(
     TEMPLATE_STATUS.PUBLISHED
   );
-  const [file, setFile] = useState<File | null>(null);
-  const [fileSrc, setFileSrc] = useState<string | null>(null);
   const [title, setTitle] = useState("");
-  const [addTemplateRequest, { isLoading, error }] = useAddTemplateMutation();
-
-  const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-    const file = e.target.files[0];
-    if (file) {
-      const src = URL.createObjectURL(file);
-      setFileSrc(src);
-      setFile(file);
-    }
-  };
+  const [editTemplateRequest, { isLoading, error }] = useEditTemplateMutation();
 
   const save = async () => {
-    const res = await addTemplateRequest({
-      title,
+    const res = await editTemplateRequest({
+      uid: template.uid,
       status,
-      image: await toBase64(file),
+      title,
     });
     if ("data" in res) {
       handleClose();
@@ -63,28 +42,23 @@ const AddMemeDialog = ({ open, handleClose }: Props) => {
   };
 
   useEffect(() => {
-    if (open) {
-      setFile(null);
-      setFileSrc(null);
-      setTitle(null);
+    if (open && template) {
+      setTitle(template.title);
+      setStatus(template.status);
     }
   }, [open]);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>
-        Add meme
+        Edit meme
         <CloseDialogButton onClick={handleClose} />
       </DialogTitle>
       <DialogContent>
         {error ? <Alert severity="error">{(error as any).data}</Alert> : null}
-        <Button variant="contained" component="label" sx={{ mb: 2 }}>
-          Upload
-          <input hidden accept="image/*" type="file" onChange={onFileChange} />
-        </Button>
-        {fileSrc && (
+        {template && (
           <Stack direction="row" gap={2}>
-            {fileSrc && <img src={fileSrc} style={{ maxWidth: "512px" }} />}
+            <img src={template.url} style={{ maxWidth: "512px" }} />
             <Stack>
               <TextField
                 fullWidth
@@ -99,6 +73,7 @@ const AddMemeDialog = ({ open, handleClose }: Props) => {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      checked={status === TEMPLATE_STATUS.PUBLISHED}
                       onChange={(e, value) =>
                         setStatus(
                           value
@@ -116,7 +91,7 @@ const AddMemeDialog = ({ open, handleClose }: Props) => {
         )}
       </DialogContent>
       <DialogActions>
-        <LoaderButton onClick={save} loader={isLoading} disabled={isLoading}>
+        <LoaderButton onClick={save} loader={isLoading}>
           Save
         </LoaderButton>
       </DialogActions>
@@ -124,4 +99,4 @@ const AddMemeDialog = ({ open, handleClose }: Props) => {
   );
 };
 
-export default AddMemeDialog;
+export default EditMemeDialog;

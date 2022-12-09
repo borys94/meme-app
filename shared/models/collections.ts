@@ -1,4 +1,5 @@
 export enum COLLECTIONS {
   USERS = "users",
-  TEMPLATES = "templates"
+  TEMPLATES = "templates",
+  FAVOURITES = "favourites"
 }

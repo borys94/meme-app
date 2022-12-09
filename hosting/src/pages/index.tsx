@@ -16,7 +16,6 @@ export default function IndexPage() {
           <Stack>
             <Tabs />
             <Stack direction="row" gap={2}>
-              <Image src="/example.jpeg" alt="meme" width="512" height="512" />
               <Stack gap={1} alignItems="baseline">
                 <IconButton>
                   <TextFieldsIcon />

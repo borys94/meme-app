@@ -4,6 +4,8 @@ import Head from "next/head";
 
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import GlobalStyles from "@mui/material/GlobalStyles";
+
 import { CacheProvider } from "@emotion/react";
 import theme from "../theme";
 import createEmotionCache from "../utils/createEmotionCache";
@@ -27,6 +29,7 @@ export default function MyApp(props) {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <GlobalStyles styles={{ a: { textDecoration: "none" } }} />
           <AppContextProvider>
             <Layout>
               <Component {...pageProps} />
