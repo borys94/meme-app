@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import AppBar from "./AppBar";
 
 interface Props {
@@ -6,8 +5,6 @@ interface Props {
 }
 
 const Layout = ({ children }: Props) => {
-  const [collapsed, setCollapsed] = useState(false);
-
   return (
     <>
       <AppBar />

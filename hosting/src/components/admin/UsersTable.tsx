@@ -5,29 +5,17 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-import {
-  getFirestore,
-  collection,
-  CollectionReference,
-} from "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import { firebase } from "../../FirebaseConfig";
-import { COLLECTIONS } from "@shared/models/collections";
 import { UserModel } from "@shared/models/user";
 import dateUtils from "@utils/dateUtils";
 import MenuButton from "@components/MenuButton";
+import { useCollectionData, QUERIES } from "@services/queries";
 
 import EditUserDialog from "./EditUserDialog";
 
 export default function UsersTable() {
   const [currentUser, setCurrentUser] = useState<UserModel | null>(null);
   const [isEditUserDialogOpen, setIsEditUserDialogOpen] = useState(false);
-  const [users, loading, error] = useCollectionData<UserModel>(
-    collection(
-      getFirestore(firebase),
-      COLLECTIONS.USERS
-    ) as CollectionReference<UserModel>
-  );
+  const [users] = useCollectionData<UserModel>(QUERIES.GET_USERS);
 
   return (
     <>

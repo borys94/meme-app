@@ -35,7 +35,9 @@ export default function MenuButton({ label, items }: Props) {
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         {items.map((item) => (
-          <MenuItem onClick={item.onClick}>{item.label}</MenuItem>
+          <MenuItem key={item.label} onClick={item.onClick}>
+            {item.label}
+          </MenuItem>
         ))}
       </Menu>
     </div>

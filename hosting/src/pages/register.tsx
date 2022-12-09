@@ -23,9 +23,6 @@ import MuiFormControlLabel, {
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-
-import { auth } from "../FirebaseConfig";
 import { useSignUpMutation } from "@stores/api/user";
 
 interface State {
@@ -55,7 +52,6 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(
 
 const RegisterPage = () => {
   const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
   const router = useRouter();
   const [values, setValues] = useState<State>({
     email: "",

@@ -3,9 +3,7 @@ import { createApi, BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import { AxiosRequestConfig, AxiosError } from "axios";
 
 const axiosBaseQuery =
-  (
-    { baseUrl }: { baseUrl: string } = { baseUrl: "" }
-  ): BaseQueryFn<
+  (): BaseQueryFn<
     {
       url: string;
       method: AxiosRequestConfig["method"];
@@ -39,9 +37,7 @@ const axiosBaseQuery =
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: axiosBaseQuery({
-    baseUrl: process.env.REACT_APP_PUBLIC_API_URL!,
-  }),
+  baseQuery: axiosBaseQuery(),
   tagTypes: ["auth"],
-  endpoints: (builder) => ({}),
+  endpoints: () => ({}),
 });

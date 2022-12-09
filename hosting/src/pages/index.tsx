@@ -1,14 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
-import {
-  Card,
-  TextField,
-  CardContent,
-  Container,
-  Stack,
-  Button,
-  IconButton,
-} from "@mui/material";
+import { Card, CardContent, Container, Stack, IconButton } from "@mui/material";
 
 import TextFieldsIcon from "@mui/icons-material/TextFields";
 import EditIcon from "@mui/icons-material/Edit";
@@ -41,7 +32,6 @@ export default function IndexPage() {
                     <RedoIcon />
                   </IconButton>
                 </Stack>
-                {/* <Button variant="contained" color="secondary">Create</Button> */}
               </Stack>
             </Stack>
           </Stack>

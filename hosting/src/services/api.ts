@@ -18,7 +18,9 @@ export function configureApi() {
     if (isClientSide) {
       if (auth.currentUser) {
         const { token } = await auth.currentUser.getIdTokenResult();
-        config.headers!.Token = token;
+        if (config.headers) {
+          config.headers.Token = token;
+        }
       }
     }
 
