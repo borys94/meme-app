@@ -27,10 +27,26 @@ const extendedApi = api.injectEndpoints({
         },
       }),
     }),
+    removeFavourite: builder.mutation<
+      string,
+      {
+        userId: string;
+        templateId: string;
+      }
+    >({
+      query: ({ userId, templateId }) => ({
+        url: `/users/${userId}/favourites/${templateId}`,
+        method: "delete",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
 export default extendedApi;
 
-export const { useSignUpMutation, useAddFavouriteMutation } = extendedApi;
+export const {
+  useSignUpMutation,
+  useAddFavouriteMutation,
+  useRemoveFavouriteMutation,
+} = extendedApi;

@@ -11,11 +11,31 @@ import Stack from "@mui/material/Stack";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Box from "@mui/material/Box";
 
 import CloseDialogButton from "@components/CloseDialogButton";
 import LoaderButton from "@components/LoaderButton";
 import { useEditTemplateMutation } from "@stores/api/admin";
-import { TemplateModel, TEMPLATE_STATUS } from "@shared/models/template";
+import {
+  TemplateModel,
+  TemplateText,
+  TEMPLATE_STATUS,
+} from "@shared/models/template";
+
+import Text from "../../TextEditor";
+import TemplateEditor from "@components/TemplateEditor";
+
+const emptyText: TemplateText = {
+  topLeft: {
+    x: 0,
+    y: 0,
+  },
+  text: "Type here",
+  bottomRight: {
+    x: 100,
+    y: 50,
+  },
+};
 
 interface Props {
   open: boolean;
@@ -28,12 +48,14 @@ const EditMemeDialog = ({ open, template, handleClose }: Props) => {
     TEMPLATE_STATUS.PUBLISHED
   );
   const [title, setTitle] = useState("");
+  const [texts, setTexts] = useState<TemplateText[]>([]);
   const [editTemplateRequest, { isLoading, error }] = useEditTemplateMutation();
 
   const save = async () => {
     const res = await editTemplateRequest({
       uid: template.uid,
       status,
+      texts,
       title,
     });
     if ("data" in res) {
@@ -45,8 +67,13 @@ const EditMemeDialog = ({ open, template, handleClose }: Props) => {
     if (open && template) {
       setTitle(template.title);
       setStatus(template.status);
+      setTexts(template.texts || []);
     }
   }, [open]);
+
+  const handleTextChange = (texts: TemplateText[]) => {
+    setTexts([...texts]);
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -58,34 +85,48 @@ const EditMemeDialog = ({ open, template, handleClose }: Props) => {
         {error ? <Alert severity="error">{(error as any).data}</Alert> : null}
         {template && (
           <Stack direction="row" gap={2}>
-            <img src={template.url} style={{ maxWidth: "512px" }} />
-            <Stack>
-              <TextField
-                fullWidth
-                id="template-title"
-                margin="dense"
-                label="Title"
-                variant="standard"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+            <Box position="relative" marginTop={2}>
+              <TemplateEditor
+                template={template}
+                texts={texts}
+                onChange={handleTextChange}
               />
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={status === TEMPLATE_STATUS.PUBLISHED}
-                      onChange={(e, value) =>
-                        setStatus(
-                          value
-                            ? TEMPLATE_STATUS.PUBLISHED
-                            : TEMPLATE_STATUS.UNPUBLISHED
-                        )
-                      }
-                    />
-                  }
-                  label="Publish"
+            </Box>
+            <Stack direction="column" gap={2}>
+              <Stack>
+                <TextField
+                  fullWidth
+                  id="template-title"
+                  margin="dense"
+                  label="Title"
+                  variant="standard"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
-              </FormGroup>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={status === TEMPLATE_STATUS.PUBLISHED}
+                        onChange={(e, value) =>
+                          setStatus(
+                            value
+                              ? TEMPLATE_STATUS.PUBLISHED
+                              : TEMPLATE_STATUS.UNPUBLISHED
+                          )
+                        }
+                      />
+                    }
+                    label="Publish"
+                  />
+                </FormGroup>
+                <Button
+                  variant="contained"
+                  onClick={() => setTexts([...texts, emptyText])}
+                >
+                  Add text
+                </Button>
+              </Stack>
             </Stack>
           </Stack>
         )}

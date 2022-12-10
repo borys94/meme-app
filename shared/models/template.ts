@@ -4,6 +4,19 @@ export interface TemplateModel {
   title: string;
   url: string;
   createdAt: number;
+  texts: TemplateText[];
+}
+
+export interface TemplateText {
+  topLeft: {
+    x: number;
+    y: number;
+  };
+  bottomRight: {
+    x: number;
+    y: number;
+  };
+  text: string
 }
 
 export enum TEMPLATE_STATUS {

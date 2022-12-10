@@ -10,7 +10,7 @@ import {signUp} from "./routes/auth/signUp";
 import {currentUser} from "./middlewares/currentUser";
 import {errorHandler} from "./middlewares/errorHandler";
 
-import {addFavouriteRouter} from "./routes/users/addFavourite";
+import {usersRouter} from "./routes/users";
 import {updateUser} from "./routes/admin/updateUser";
 import {adminTemplatesRouter} from "./routes/admin/templates";
 
@@ -25,7 +25,7 @@ app.use(cors({
 app.use(currentUser);
 
 app.use("/admin", adminTemplatesRouter);
-app.use("/users", addFavouriteRouter);
+app.use(usersRouter);
 
 
 // const upload = multer({

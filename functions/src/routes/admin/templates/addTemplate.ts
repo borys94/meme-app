@@ -16,14 +16,16 @@ router.post("/", async function(req: Request, res: Response) {
   const file = firebase.storage.bucket().file(`templates/${title}.${ext}`);
   await file.save(imageBuffer);
   await file.makePublic();
+  // file.set
   const url = file.publicUrl();
 
   const template: Omit<TemplateModel, "uid"> = {
     title,
     url,
     status,
+    texts: [],
     createdAt: Date.now(),
-  }
+  };
   await firebase.firestore.collection(COLLECTIONS.TEMPLATES).add(template);
   res.status(200).send({
     data: "",

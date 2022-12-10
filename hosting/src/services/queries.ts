@@ -24,7 +24,7 @@ const useQuery = <T = unknown>(
   const [data, loading, error] = useCollection<T>(firebaseQueries[q](params));
   const dataWithIds = data?.docs.map((doc) => ({ ...doc.data(), uid: doc.id }));
 
-  return [dataWithIds, loading, error];
+  return [dataWithIds || [], loading, error];
 };
 
 const getUsers = () => {
@@ -40,6 +40,9 @@ const getTemplates = ({ status }: { status?: TEMPLATE_STATUS }) => {
 };
 
 const getFavourites = ({ userId }: { userId: string }) => {
+  if (!userId) {
+    return null;
+  }
   return query(
     collection(firestore, COLLECTIONS.USERS, userId, COLLECTIONS.FAVOURITES)
   );
