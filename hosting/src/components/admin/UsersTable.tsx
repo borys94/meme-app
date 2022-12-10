@@ -7,7 +7,7 @@ import TableRow from "@mui/material/TableRow";
 
 import { UserModel } from "@shared/models/user";
 import dateUtils from "@utils/dateUtils";
-import MenuButton from "@components/MenuButton";
+import MenuButton from "./MenuButton";
 import { useCollectionData, QUERIES } from "@services/queries";
 
 import EditUserDialog from "./EditUserDialog";

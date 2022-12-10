@@ -1,10 +1,4 @@
-import {
-  collection,
-  query,
-  FirestoreError,
-  where,
-  doc,
-} from "firebase/firestore";
+import { collection, query, FirestoreError, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 import { firestore } from "../FirebaseConfig";

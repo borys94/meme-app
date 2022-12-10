@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import CloseDialogButton from "@components/CloseDialogButton";
+import CloseDialogButton from "@components/common/CloseDialogButton";
 import { UserModel, USER_ROLES } from "@shared/models/user";
 import { useUpdateUserMutation } from "@stores/api/admin";
 

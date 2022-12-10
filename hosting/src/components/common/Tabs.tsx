@@ -4,9 +4,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
-import UsersTable from "./UsersTable";
-import TemplatesList from "./TemplatesList";
-
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -36,7 +33,16 @@ function a11yProps(index: number) {
   };
 }
 
-export default function BasicTabs() {
+interface Item {
+  label: string;
+  render: () => React.ReactNode;
+}
+
+interface Props {
+  items: Item[];
+}
+
+export default function TabsComponent({ items }: Props) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -51,16 +57,16 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Users" {...a11yProps(0)} />
-          <Tab label="Templates" {...a11yProps(1)} />
+          {items.map((item, index) => (
+            <Tab key={item.label} label={item.label} {...a11yProps(index)} />
+          ))}
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        <UsersTable />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <TemplatesList />
-      </TabPanel>
+      {items.map((item, index) => (
+        <TabPanel value={value} index={index} key={index}>
+          {item.render()}
+        </TabPanel>
+      ))}
     </Box>
   );
 }

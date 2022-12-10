@@ -1,6 +1,6 @@
-import { Box, Theme } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { TemplateText, TemplateModel } from "@shared/models/template";
+import { TemplateText } from "@shared/models/template";
 import { useState, useEffect, DragEvent } from "react";
 
 import PanToolIcon from "@mui/icons-material/PanTool";
@@ -28,20 +28,12 @@ const ResizeButton = styled("div")<ResizeButtonProps>(
 );
 
 interface Props {
-  template: TemplateModel;
   text: TemplateText;
-  height: number;
-  width: number;
+  initialLabel: string;
   onChange: (text: TemplateText) => void;
 }
 
-export default function Text({
-  template,
-  text,
-  height,
-  width,
-  onChange,
-}: Props) {
+export default function Text({ text, initialLabel, onChange }: Props) {
   const [ghostElement, setGhostElement] = useState<HTMLElement | null>(null);
   const [label, setLabel] = useState("");
 
@@ -55,69 +47,58 @@ export default function Text({
     e.dataTransfer.setDragImage(div, 0, 0);
   };
 
-  const onDragEnd = (e: DragEvent) => {
+  const onDragEnd = () => {
     if (ghostElement) {
       ghostElement.remove();
     }
   };
 
   const onDrag = (e: DragEvent) => {
-    if (
-      text.topLeft.x + e.nativeEvent.offsetX < text.bottomRight.x &&
-      text.topLeft.y + e.nativeEvent.offsetY < text.bottomRight.y &&
-      text.topLeft.x + e.nativeEvent.offsetX > 0 &&
-      text.topLeft.y + e.nativeEvent.offsetY > 0 &&
-      text.bottomRight.x + e.nativeEvent.offsetX < width &&
-      text.bottomRight.y + e.nativeEvent.offsetY < height
-    ) {
-      onChange({
-        ...text,
-        topLeft: {
-          x: Math.max(0, text.topLeft.x + e.nativeEvent.offsetX),
-          y: Math.max(0, text.topLeft.y + e.nativeEvent.offsetY),
-        },
-        bottomRight: {
-          x: Math.min(width, text.bottomRight.x + e.nativeEvent.offsetX),
-          y: Math.min(height, text.bottomRight.y + e.nativeEvent.offsetY),
-        },
-      });
+    e.preventDefault();
+    if (e.nativeEvent.pageX === 0 && e.nativeEvent.pageY === 0) {
+      return;
     }
+    onChange({
+      ...text,
+      topLeft: {
+        x: text.topLeft.x + e.nativeEvent.offsetX,
+        y: text.topLeft.y + e.nativeEvent.offsetY,
+      },
+      bottomRight: {
+        x: text.bottomRight.x + e.nativeEvent.offsetX,
+        y: text.bottomRight.y + e.nativeEvent.offsetY,
+      },
+    });
   };
 
   const onTopLeftDrag = (e: DragEvent) => {
     e.preventDefault();
-
-    if (
-      text.topLeft.x + e.nativeEvent.offsetX < text.bottomRight.x &&
-      text.topLeft.y + e.nativeEvent.offsetY < text.bottomRight.y &&
-      text.topLeft.x + e.nativeEvent.offsetX > -40 &&
-      text.topLeft.y + e.nativeEvent.offsetY > -40
-    ) {
-      onChange({
-        ...text,
-        topLeft: {
-          x: Math.max(0, text.topLeft.x + e.nativeEvent.offsetX),
-          y: Math.max(0, text.topLeft.y + e.nativeEvent.offsetY),
-        },
-      });
+    if (e.nativeEvent.pageX === 0 && e.nativeEvent.pageY === 0) {
+      return;
     }
+
+    onChange({
+      ...text,
+      topLeft: {
+        x: text.topLeft.x + e.nativeEvent.offsetX,
+        y: text.topLeft.y + e.nativeEvent.offsetY,
+      },
+    });
   };
 
   const onBottomRightDrag = (e: DragEvent) => {
     e.preventDefault();
-
-    if (
-      text.bottomRight.x + e.nativeEvent.offsetX > text.topLeft.x &&
-      text.bottomRight.y + e.nativeEvent.offsetY > text.topLeft.y
-    ) {
-      onChange({
-        ...text,
-        bottomRight: {
-          x: Math.min(width, text.bottomRight.x + e.nativeEvent.offsetX),
-          y: Math.min(height, text.bottomRight.y + e.nativeEvent.offsetY),
-        },
-      });
+    if (e.nativeEvent.pageX === 0 && e.nativeEvent.pageY === 0) {
+      return;
     }
+
+    onChange({
+      ...text,
+      bottomRight: {
+        x: text.bottomRight.x + e.nativeEvent.offsetX,
+        y: text.bottomRight.y + e.nativeEvent.offsetY,
+      },
+    });
   };
 
   const handleTextChange = (e: any) => {
@@ -129,8 +110,8 @@ export default function Text({
   };
 
   useEffect(() => {
-    setLabel(text?.text || "");
-  }, [template]);
+    setLabel(initialLabel || "");
+  }, [initialLabel]);
 
   return (
     <Box position="absolute" top="0" left="0">

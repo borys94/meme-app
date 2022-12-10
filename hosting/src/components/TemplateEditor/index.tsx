@@ -1,11 +1,7 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { TemplateModel, TemplateText } from "@shared/models/template";
-import { useEffect, useState, useRef, useMemo } from "react";
-import Toolbar from "./Toolbar";
+import { useEffect, useRef } from "react";
 import Text from "../TextEditor";
-
-import canvasUtils from "@utils/canvas";
-import generateMeme from "@utils/generateMeme";
 
 interface Props {
   template: TemplateModel | null;
@@ -15,8 +11,7 @@ interface Props {
 
 const TemplateEditor = ({ template, texts, onChange }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>();
-  const scale = useMemo(() => window.devicePixelRatio * 2, []);
-  // const [texts, setTexts] = useState<TemplateText[]>([]);
+  // const scale = useMemo(() => window.devicePixelRatio * 2, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,19 +22,12 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
     image.crossOrigin = "anonymous";
     image.src = template.url;
 
-    image.addEventListener("load", (e) => {
+    image.addEventListener("load", () => {
       const factor = image.width / 512 / 2;
       canvas.height = image.height / factor;
       ctx.drawImage(image, 0, 0, image.width / factor, image.height / factor);
     });
   }, [template]);
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
-      ctx.imageSmoothingEnabled = false;
-    }
-  }, [canvasRef.current]);
 
   useEffect(() => {
     if (template) {
@@ -54,7 +42,6 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
 
   return (
     <Box position="relative">
-      {/* <Toolbar /> */}
       <Box position="relative">
         <canvas
           ref={canvasRef}
@@ -62,17 +49,16 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
           width={512 * 2}
           height={512 * 2}
         />
-        {canvasRef.current &&
-          texts?.map((text, index) => (
-            <Text
-              template={template}
-              height={canvasRef.current.height / 2}
-              width={canvasRef.current.width / 2}
-              text={text}
-              onChange={(text) => handleTextChange(text, index)}
-              key={index}
-            />
-          ))}
+        {texts?.map((text, index) => (
+          <Text
+            // height={(canvasRef.current?.height || 0) / 2}
+            // width={(canvasRef.current?.width || 0) / 2}
+            text={text}
+            initialLabel={template.texts[index].text}
+            onChange={(text) => handleTextChange(text, index)}
+            key={index}
+          />
+        ))}
       </Box>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -13,17 +13,15 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
 
-import CloseDialogButton from "@components/CloseDialogButton";
-import LoaderButton from "@components/LoaderButton";
+import CloseDialogButton from "@components/common/CloseDialogButton";
+import LoaderButton from "@components/common/LoaderButton";
+import TemplateEditor from "@components/TemplateEditor";
 import { useEditTemplateMutation } from "@stores/api/admin";
 import {
   TemplateModel,
   TemplateText,
   TEMPLATE_STATUS,
 } from "@shared/models/template";
-
-import Text from "../../TextEditor";
-import TemplateEditor from "@components/TemplateEditor";
 
 const emptyText: TemplateText = {
   topLeft: {

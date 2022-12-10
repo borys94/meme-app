@@ -5,11 +5,13 @@ import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
+import Container from "@mui/material/Container";
 
 import { CacheProvider } from "@emotion/react";
 import theme from "../theme";
 import createEmotionCache from "../utils/createEmotionCache";
-import Layout from "@components/Layout";
+import AppBar from "@components/AppBar";
+import Footer from "@components/Footer";
 import { AppContextProvider } from "@components/AppContextProvider";
 
 import { configureApi } from "@services/api";
@@ -31,9 +33,11 @@ export default function MyApp(props) {
           <CssBaseline />
           <GlobalStyles styles={{ a: { textDecoration: "none" } }} />
           <AppContextProvider>
-            <Layout>
+            <AppBar />
+            <Container sx={{ mb: 2, minHeight: "calc(100vh - 200px)" }}>
               <Component {...pageProps} />
-            </Layout>
+            </Container>
+            <Footer />
           </AppContextProvider>
         </ThemeProvider>
       </Provider>

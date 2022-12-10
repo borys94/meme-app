@@ -12,8 +12,8 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-import CloseDialogButton from "@components/CloseDialogButton";
-import LoaderButton from "@components/LoaderButton";
+import CloseDialogButton from "@components/common/CloseDialogButton";
+import LoaderButton from "@components/common/LoaderButton";
 import { useAddTemplateMutation } from "@stores/api/admin";
 import { TEMPLATE_STATUS } from "@shared/models/template";
 

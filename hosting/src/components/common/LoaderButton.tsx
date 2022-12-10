@@ -15,17 +15,9 @@ const Loader = () => (
 
 type Props = ButtonProps & {
   loader: boolean;
-  startIcon?: boolean;
-  // variant: ButtonProps["variant"];
 };
 
-const LoaderButton = ({
-  startIcon = false,
-  variant = "contained",
-  loader,
-  children,
-  ...props
-}: Props) => (
+const LoaderButton = ({ loader, children, ...props }: Props) => (
   <Button {...props} disabled={loader}>
     {loader ? <Loader /> : children}
   </Button>
