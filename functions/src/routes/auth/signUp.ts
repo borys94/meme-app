@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import express, {Request, Response} from "express";
 
 import firebase from "../../services/firebaseService";
 import {COLLECTIONS} from "../../../../shared/models/collections";
@@ -6,7 +6,10 @@ import {COLLECTIONS} from "../../../../shared/models/collections";
 import {FirebaseAuthError} from "../../errors";
 import {USER_ROLES} from "../../../../shared/models/user";
 
-export const signUp = async (req: Request, res: Response) => {
+// eslint-disable-next-line
+const router = express.Router();
+
+router.post("/signUp", async function(req: Request, res: Response) {
   const {email, password} = req.body;
 
   let user;
@@ -29,4 +32,6 @@ export const signUp = async (req: Request, res: Response) => {
   res.status(200).send({
     data: user.uid,
   });
-};
+});
+
+export {router as signUpRouter};

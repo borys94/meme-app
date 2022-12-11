@@ -26,6 +26,7 @@ module.exports = {
   ],
   rules: {
     "quotes": ["error", "double"],
+    "@typescript-eslint/no-non-null-assertion": 0,
     "import/no-unresolved": 0,
     "require-jsdoc": 0,
     "max-len": [

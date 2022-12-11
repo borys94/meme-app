@@ -1,4 +1,5 @@
 import express, {Request, Response} from "express";
+import crypto from "crypto";
 
 import firebase from "../../../services/firebaseService";
 import {COLLECTIONS} from "../../../../../shared/models/collections";
@@ -13,7 +14,7 @@ router.post("/", async function(req: Request, res: Response) {
   const {image, title, status} = req.body;
 
   const [buffer, ext] = base64ToBuffer(image);
-  const path = `templates/${title}.${ext}`;
+  const path = `templates/${crypto.randomUUID()}.${ext}`;
   const url = await createPublicFile(buffer, path);
 
   const template: Omit<TemplateModel, "uid"> = {

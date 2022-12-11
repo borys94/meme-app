@@ -58,7 +58,7 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
             height={(height || 0) / 2}
             width={(width || 0) / 2}
             text={text}
-            initialLabel={template.texts[index].text}
+            initialLabel={template.texts[index]?.text || texts[index].text}
             onChange={(text) => handleTextChange(text, index)}
             key={index}
           />
