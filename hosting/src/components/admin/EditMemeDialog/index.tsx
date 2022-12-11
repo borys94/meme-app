@@ -33,6 +33,16 @@ const emptyText: TemplateText = {
     x: 100,
     y: 50,
   },
+  styles: {
+    fontFamily: "Arial",
+    fontSize: 40,
+    bold: false,
+    italic: false,
+    underline: false,
+    color: "#000000",
+    shadowColor: "#ffffff",
+    textAlign: "center",
+  },
 };
 
 interface Props {

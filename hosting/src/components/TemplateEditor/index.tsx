@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { TemplateModel, TemplateText } from "@shared/models/template";
 import { useEffect, useState, useRef } from "react";
-import Text from "../TextEditor";
+import Text from "./TextEditor";
 
 interface Props {
   template: TemplateModel | null;
@@ -13,7 +13,6 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  // const scale = useMemo(() => window.devicePixelRatio * 2, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -46,6 +45,7 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
 
   return (
     <Box position="relative">
+      {/* <Toolbar /> */}
       <Box position="relative">
         <canvas
           ref={canvasRef}

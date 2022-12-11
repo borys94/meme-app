@@ -16,7 +16,19 @@ export interface TemplateText {
     x: number;
     y: number;
   };
-  text: string
+  text: string;
+  styles: TemplateTextStyles;
+}
+
+export interface TemplateTextStyles {
+  fontFamily: string;
+  fontSize: number;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  color: string;
+  shadowColor: string;
+  textAlign: string;
 }
 
 export enum TEMPLATE_STATUS {

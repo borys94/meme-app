@@ -1,12 +1,14 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { TemplateText } from "@shared/models/template";
+import { TemplateText, TemplateTextStyles } from "@shared/models/template";
 import {
   useState,
   useEffect,
   PointerEvent as ReactPointerEvent,
   MouseEvent,
 } from "react";
+
+import Toolbar from "./Toolbar";
 
 interface ResizeButtonProps {
   left?: boolean;
@@ -106,7 +108,7 @@ export default function Text({
 
   const handleTextChange = (e: any) => {
     onChange({
-      topLeft: text.topLeft,
+      ...text,
       bottomRight: text.bottomRight,
       text: e.target.innerHTML,
     });
@@ -234,6 +236,15 @@ export default function Text({
     }
   }, [active]);
 
+  const handleToolbarChange = (styles: TemplateTextStyles) => {
+    onChange({
+      ...text,
+      styles,
+    });
+  };
+
+  const { shadowColor } = text.styles;
+
   return (
     <Box position="absolute" top="0" left="0">
       <div
@@ -248,6 +259,9 @@ export default function Text({
           height: text.bottomRight.y - text.topLeft.y,
         }}
       >
+        {(active || !!dragType) && (
+          <Toolbar onChange={handleToolbarChange} {...text.styles} />
+        )}
         <div
           contentEditable
           onInput={handleTextChange}
@@ -256,13 +270,16 @@ export default function Text({
           style={{
             width: text.bottomRight.x - text.topLeft.x,
             height: text.bottomRight.y - text.topLeft.y,
-            fontSize: 48,
-            fontFamily: "Impact",
-            color: "white",
+            fontSize: text.styles.fontSize,
+            fontFamily: text.styles.fontFamily,
+            textDecoration: text.styles.underline ? "underline" : "none",
+            fontWeight: text.styles.bold ? "bold" : "normal",
+            fontStyle: text.styles.italic ? "italic" : "normal",
+            color: text.styles.color,
+            textAlign: text.styles.textAlign as any,
             lineHeight: 1.5,
             marginLeft: 1,
-            textShadow:
-              "black -1px 0px, black 0px 1px, black 1px 0px, black 0px -1px",
+            textShadow: `${shadowColor} -1px 0px, ${shadowColor} 0px 1px, ${shadowColor} 1px 0px, ${shadowColor} 0px -1px`,
             caretColor: "#4d90fe",
             outline: "0px solid transparent",
           }}
