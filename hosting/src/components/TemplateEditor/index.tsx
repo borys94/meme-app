@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { TemplateModel, TemplateText } from "@shared/models/template";
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Text from "../TextEditor";
 
 interface Props {
@@ -11,6 +11,8 @@ interface Props {
 
 const TemplateEditor = ({ template, texts, onChange }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>();
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
   // const scale = useMemo(() => window.devicePixelRatio * 2, []);
 
   useEffect(() => {
@@ -25,6 +27,8 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
     image.addEventListener("load", () => {
       const factor = image.width / 512 / 2;
       canvas.height = image.height / factor;
+      setWidth(image.width / factor);
+      setHeight(image.height / factor);
       ctx.drawImage(image, 0, 0, image.width / factor, image.height / factor);
     });
   }, [template]);
@@ -51,8 +55,8 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
         />
         {texts?.map((text, index) => (
           <Text
-            // height={(canvasRef.current?.height || 0) / 2}
-            // width={(canvasRef.current?.width || 0) / 2}
+            height={(height || 0) / 2}
+            width={(width || 0) / 2}
             text={text}
             initialLabel={template.texts[index].text}
             onChange={(text) => handleTextChange(text, index)}

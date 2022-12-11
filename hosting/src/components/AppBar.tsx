@@ -1,5 +1,4 @@
 import { useState, useContext } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSignOut } from "react-firebase-hooks/auth";
@@ -58,7 +57,7 @@ function ResponsiveAppBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link href="/" passHref>
-            <Image src="/main.png" alt="me" width="64" height="64" />
+            <img src="/logo.png" alt="me" width="50%" />
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
