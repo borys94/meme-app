@@ -221,15 +221,15 @@ export default function Text({
 
   const onClickOutside = () => {
     setActive(false);
-    window.removeEventListener("click", onClickOutside);
+    window.removeEventListener("mousedown", onClickOutside);
   };
 
   useEffect(() => {
     if (active) {
-      window.addEventListener("click", onClickOutside);
+      window.addEventListener("mousedown", onClickOutside);
 
       return () => {
-        window.removeEventListener("click", onClickOutside);
+        window.removeEventListener("mousedown", onClickOutside);
       };
     }
   }, [active]);
@@ -237,7 +237,7 @@ export default function Text({
   return (
     <Box position="absolute" top="0" left="0">
       <div
-        onClick={onBoxClick}
+        onMouseDown={onBoxClick}
         style={{
           position: "absolute",
           border:

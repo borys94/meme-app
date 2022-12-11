@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent, Container } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 
 import Tabs from "@components/common/Tabs";
 import MemeCreator from "@components/MemeCreator";
@@ -17,26 +17,24 @@ export default function IndexPage() {
   };
 
   return (
-    <Container>
-      <Card>
-        <CardContent>
-          <Tabs
-            items={[
-              {
-                label: "Popular",
-                render: () => (
-                  <PopularMemes handleTemplateClick={handleTemplateClick} />
-                ),
-              },
-              {
-                label: "Favourites",
-                render: () => <FavouritesMemes />,
-              },
-            ]}
-          />
-          <MemeCreator template={currentTemplate} />
-        </CardContent>
-      </Card>
-    </Container>
+    <Card>
+      <CardContent>
+        <Tabs
+          items={[
+            {
+              label: "Popular",
+              render: () => (
+                <PopularMemes handleTemplateClick={handleTemplateClick} />
+              ),
+            },
+            {
+              label: "Favourites",
+              render: () => <FavouritesMemes />,
+            },
+          ]}
+        />
+        <MemeCreator template={currentTemplate} />
+      </CardContent>
+    </Card>
   );
 }
