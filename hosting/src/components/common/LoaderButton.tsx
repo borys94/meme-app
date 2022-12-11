@@ -15,6 +15,7 @@ const Loader = () => (
 
 type Props = ButtonProps & {
   loader: boolean;
+  component?: string;
 };
 
 const LoaderButton = ({ loader, children, ...props }: Props) => (

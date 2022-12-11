@@ -1,75 +1,28 @@
-import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import { Avatar, Button, CardContent } from "@mui/material";
+import { CardContent } from "@mui/material";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+import Tabs from "@components/common/Tabs";
+import Account from "@components/profile/Account";
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
+const Profile = () => {
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
-export default function BasicTabs() {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
-  return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Card>
+      <CardContent>
         <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          <Tab label="Account" {...a11yProps(0)} />
-          <Tab label="Security" {...a11yProps(1)} />
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index={0}>
-        <Card elevation={16}>
-          <CardContent>
-            <Avatar sx={{ width: 128, height: 128 }} />
-            <Button variant="contained">Upload</Button>
-            <Button variant="outlined">Reset</Button>
-          </CardContent>
-        </Card>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-    </Box>
+          items={[
+            {
+              label: "Account",
+              render: () => <Account />,
+            },
+            {
+              label: "Security",
+              render: () => <div />,
+            },
+          ]}
+        />
+      </CardContent>
+    </Card>
   );
-}
+};
+
+export default Profile;

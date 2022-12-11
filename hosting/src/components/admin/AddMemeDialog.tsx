@@ -17,13 +17,7 @@ import LoaderButton from "@components/common/LoaderButton";
 import { useAddTemplateMutation } from "@stores/api/admin";
 import { TEMPLATE_STATUS } from "@shared/models/template";
 
-const toBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
+import fileToBase64 from "@utils/fileToBase64";
 
 interface Props {
   open: boolean;
@@ -55,7 +49,7 @@ const AddMemeDialog = ({ open, handleClose }: Props) => {
     const res = await addTemplateRequest({
       title,
       status,
-      image: await toBase64(file),
+      image: await fileToBase64(file),
     });
     if ("data" in res) {
       handleClose();

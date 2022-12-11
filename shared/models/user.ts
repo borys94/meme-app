@@ -3,6 +3,8 @@ export interface UserModel {
   email: string;
   createdAt: number;
   role: USER_ROLES;
+  avatarUrl: string;
+  avatarId: string;
 }
 
 export enum USER_ROLES {

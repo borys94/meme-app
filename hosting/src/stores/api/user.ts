@@ -39,6 +39,21 @@ const extendedApi = api.injectEndpoints({
         method: "delete",
       }),
     }),
+    updateAvatar: builder.mutation<
+      string,
+      {
+        userId: string;
+        image: string;
+      }
+    >({
+      query: ({ userId, image }) => ({
+        url: `/users/${userId}/avatar`,
+        method: "put",
+        data: {
+          image,
+        },
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -49,4 +64,5 @@ export const {
   useSignUpMutation,
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
+  useUpdateAvatarMutation,
 } = extendedApi;

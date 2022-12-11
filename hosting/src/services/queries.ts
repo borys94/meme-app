@@ -1,5 +1,11 @@
-import { collection, query, FirestoreError, where } from "firebase/firestore";
-import { useCollection } from "react-firebase-hooks/firestore";
+import {
+  collection,
+  query,
+  FirestoreError,
+  where,
+  doc,
+} from "firebase/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 
 import { firestore } from "../FirebaseConfig";
 import { COLLECTIONS } from "@shared/models/collections";
@@ -9,6 +15,8 @@ enum QUERIES {
   GET_USERS = "getUsers",
   GET_TEMPLATES = "getTemplates",
   GET_FAVOURITES = "getFavourites",
+
+  GET_USER = "getUser",
 }
 
 const useQuery = <T = unknown>(
@@ -19,6 +27,28 @@ const useQuery = <T = unknown>(
   const dataWithIds = data?.docs.map((doc) => ({ ...doc.data(), uid: doc.id }));
 
   return [dataWithIds || [], loading, error];
+};
+
+const useQueryDocument = <T = unknown>(
+  q: QUERIES,
+  params?: any
+): [data: T, loading: boolean, error: FirestoreError] => {
+  const [value, loading, error] = useDocument<T>(firebaseQueries[q](params));
+  const dataWithId = value
+    ? {
+        ...value.data(),
+        uid: value.id,
+      }
+    : null;
+
+  return [dataWithId, loading, error];
+};
+
+const getUser = ({ userId }: { userId: string }) => {
+  if (!userId) {
+    return null;
+  }
+  return doc(firestore, COLLECTIONS.USERS, userId);
 };
 
 const getUsers = () => {
@@ -46,6 +76,11 @@ const firebaseQueries: Record<QUERIES, (params?: any) => any> = {
   [QUERIES.GET_USERS]: getUsers,
   [QUERIES.GET_TEMPLATES]: getTemplates,
   [QUERIES.GET_FAVOURITES]: getFavourites,
+  [QUERIES.GET_USER]: getUser,
 };
 
-export { QUERIES, useQuery as useCollectionData };
+export {
+  QUERIES,
+  useQuery as useCollectionData,
+  useQueryDocument as useDocument,
+};
