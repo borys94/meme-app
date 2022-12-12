@@ -1,5 +1,5 @@
 export interface TemplateModel {
-  uid: string;
+  id?: string;
   status: TEMPLATE_STATUS;
   title: string;
   url: string;
@@ -28,7 +28,7 @@ export interface TemplateTextStyles {
   underline: boolean;
   color: string;
   shadowColor: string;
-  textAlign: string;
+  textAlign: "left" | "center" | "right";
 }
 
 export enum TEMPLATE_STATUS {

@@ -25,6 +25,7 @@ const generateMeme = async (template: TemplateModel, texts: Element[]) => {
   }
 
   canvasUtils.download(canvas);
+  return canvas.toDataURL();
 };
 
 export default generateMeme;

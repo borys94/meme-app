@@ -16,17 +16,18 @@ router.post("/", async function(req: Request, res: Response) {
   const [buffer, ext] = base64ToBuffer(image);
   const path = `templates/${crypto.randomUUID()}.${ext}`;
   const url = await createPublicFile(buffer, path);
+  // const url = "xxx"
 
-  const template: Omit<TemplateModel, "uid"> = {
+  const template: Omit<TemplateModel, "id"> = {
     title,
     url,
     status,
     texts: [],
     createdAt: Date.now(),
   };
-  await firebase.firestore.collection(COLLECTIONS.TEMPLATES).add(template);
+  const {id} = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).add(template);
   res.status(200).send({
-    data: "",
+    data: id,
   });
 });
 

@@ -12,7 +12,7 @@ router.post("/:id/favourites", async function(req: Request, res: Response) {
   const template = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).doc(templateId);
   const data = (await template.get()).data();
 
-  await firebase.firestore.collection(COLLECTIONS.USERS).doc(req.currentUser!.uid).collection(COLLECTIONS.FAVOURITES).doc(templateId).set({
+  await firebase.firestore.collection(COLLECTIONS.USERS).doc(req.currentUser!.id!).collection(COLLECTIONS.FAVOURITES).doc(templateId).set({
     ...data,
   });
   res.status(200).send({

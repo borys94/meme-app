@@ -28,7 +28,7 @@ const extendedApi = api.injectEndpoints({
     }),
     editTemplate: builder.mutation<string, Partial<TemplateModel>>({
       query: (template) => ({
-        url: `/admin/templates/${template.uid}`,
+        url: `/admin/templates/${template.id}`,
         method: "put",
         data: template,
       }),

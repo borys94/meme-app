@@ -1,16 +1,16 @@
 
 const getDocsWithID = <T>(snap: FirebaseFirestore.QuerySnapshot): T[] => {
-  return snap.docs?.map((d: any) => ({...d.data(), uid: d.id})) || [];
+  return snap.docs?.map((d: any) => ({...d.data(), id: d.id})) || [];
 };
 
 const getDocWithID = <T>(snap: FirebaseFirestore.DocumentSnapshot<any>): T => ({
   ...snap.data(),
-  uid: snap.id,
+  id: snap.id,
 });
 
 const getFirst = <T>(snap: FirebaseFirestore.QuerySnapshot): T => {
   const doc = snap.docs[0];
-  return doc && ({uid: doc.id, ...doc.data()} as unknown as T);
+  return doc && ({id: doc.id, ...doc.data()} as unknown as T);
 };
 
 const firestoreService = {

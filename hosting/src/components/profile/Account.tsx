@@ -18,7 +18,7 @@ const Account = () => {
     const file = e.target.files[0];
     if (file) {
       updateAvatarRequest({
-        userId: user.uid,
+        userId: user.id,
         image: await fileToBase64(file),
       });
     }
@@ -26,7 +26,7 @@ const Account = () => {
 
   return (
     <Stack direction="row" gap={2}>
-      <Avatar src={user?.avatarUrl} sx={{ width: 128, height: 128 }} />
+      <Avatar src={user?.avatar?.url} sx={{ width: 128, height: 128 }} />
       <Stack direction="row" gap={2} alignItems="center">
         <LoaderButton variant="contained" component="label" loader={isLoading}>
           Upload

@@ -4,6 +4,8 @@ import {
   FirestoreError,
   where,
   doc,
+  DocumentReference,
+  Query,
 } from "firebase/firestore";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 
@@ -15,29 +17,34 @@ enum QUERIES {
   GET_USERS = "getUsers",
   GET_TEMPLATES = "getTemplates",
   GET_FAVOURITES = "getFavourites",
+  GET_USER_MEMES = "getUserMemes",
 
   GET_USER = "getUser",
 }
 
 const useQuery = <T = unknown>(
   q: QUERIES,
-  params?: any
+  params?: unknown
 ): [data: T[], loading: boolean, error: FirestoreError] => {
-  const [data, loading, error] = useCollection<T>(firebaseQueries[q](params));
-  const dataWithIds = data?.docs.map((doc) => ({ ...doc.data(), uid: doc.id }));
+  const [data, loading, error] = useCollection<T>(
+    firebaseQueries[q](params) as Query<T>
+  );
+  const dataWithIds = data?.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
   return [dataWithIds || [], loading, error];
 };
 
 const useQueryDocument = <T = unknown>(
   q: QUERIES,
-  params?: any
+  params?: unknown
 ): [data: T, loading: boolean, error: FirestoreError] => {
-  const [value, loading, error] = useDocument<T>(firebaseQueries[q](params));
+  const [value, loading, error] = useDocument<T>(
+    firebaseQueries[q](params) as DocumentReference<T>
+  );
   const dataWithId = value
     ? {
         ...value.data(),
-        uid: value.id,
+        id: value.id,
       }
     : null;
 
@@ -63,6 +70,15 @@ const getTemplates = ({ status }: { status?: TEMPLATE_STATUS }) => {
   return query(collection(firestore, COLLECTIONS.TEMPLATES), ...constraints);
 };
 
+const getUserMemes = ({ userId }: { userId: string }) => {
+  if (!userId) {
+    return null;
+  }
+  return query(
+    collection(firestore, COLLECTIONS.USERS, userId, COLLECTIONS.MEMES)
+  );
+};
+
 const getFavourites = ({ userId }: { userId: string }) => {
   if (!userId) {
     return null;
@@ -72,11 +88,12 @@ const getFavourites = ({ userId }: { userId: string }) => {
   );
 };
 
-const firebaseQueries: Record<QUERIES, (params?: any) => any> = {
+const firebaseQueries: Record<QUERIES, (params?: unknown) => unknown> = {
   [QUERIES.GET_USERS]: getUsers,
   [QUERIES.GET_TEMPLATES]: getTemplates,
   [QUERIES.GET_FAVOURITES]: getFavourites,
   [QUERIES.GET_USER]: getUser,
+  [QUERIES.GET_USER_MEMES]: getUserMemes,
 };
 
 export {

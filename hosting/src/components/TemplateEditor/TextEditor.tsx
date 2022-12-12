@@ -6,6 +6,7 @@ import {
   useEffect,
   PointerEvent as ReactPointerEvent,
   MouseEvent,
+  FormEvent,
 } from "react";
 
 import Toolbar from "./Toolbar";
@@ -106,11 +107,11 @@ export default function Text({
   const [offsetY, setOffsetY] = useState<number | null>(null);
   const [dragType, setDragType] = useState<DragType | null>(null);
 
-  const handleTextChange = (e: any) => {
+  const handleTextChange = (e: FormEvent<HTMLDivElement>) => {
     onChange({
       ...text,
-      bottomRight: text.bottomRight,
-      text: e.target.innerHTML,
+      // eslint-disable-next-line
+      text: (e.target as any).innerHTML,
     });
   };
 
@@ -276,7 +277,7 @@ export default function Text({
             fontWeight: text.styles.bold ? "bold" : "normal",
             fontStyle: text.styles.italic ? "italic" : "normal",
             color: text.styles.color,
-            textAlign: text.styles.textAlign as any,
+            textAlign: text.styles.textAlign,
             lineHeight: 1.5,
             marginLeft: 1,
             textShadow: `${shadowColor} -1px 0px, ${shadowColor} 0px 1px, ${shadowColor} 1px 0px, ${shadowColor} 0px -1px`,

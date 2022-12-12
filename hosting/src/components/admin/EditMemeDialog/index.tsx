@@ -61,7 +61,7 @@ const EditMemeDialog = ({ open, template, handleClose }: Props) => {
 
   const save = async () => {
     const res = await editTemplateRequest({
-      uid: template.uid,
+      id: template.id,
       status,
       texts,
       title,

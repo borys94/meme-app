@@ -12,24 +12,30 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "test": "jest ./src --watchAll"
   },
   "engines": {
     "node": "16"
   },
   "main": "lib/functions/src/index.js",
   "dependencies": {
+    "@types/jest": "^29.2.4",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.1.0",
-    "multer": "^1.4.5-lts.1"
+    "jest": "^29.3.1",
+    "multer": "^1.4.5-lts.1",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.14",
     "@types/multer": "^1.4.7",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "cross-env": "^7.0.3",
@@ -39,6 +45,16 @@
     "firebase-functions-test": "^0.2.0",
     "npm-run-all": "^4.1.5",
     "typescript": "^4.5.4"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ],
+    "setupFilesAfterEnv": [
+      "./src/setupTest.ts"
+    ]
   },
   "private": true
 }

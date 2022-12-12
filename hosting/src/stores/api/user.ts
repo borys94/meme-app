@@ -54,6 +54,23 @@ const extendedApi = api.injectEndpoints({
         },
       }),
     }),
+    addMeme: builder.mutation<
+      string,
+      {
+        userId: string;
+        image: string;
+        templateId: string;
+      }
+    >({
+      query: ({ userId, templateId, image }) => ({
+        url: `/users/${userId}/memes`,
+        method: "post",
+        data: {
+          image,
+          templateId,
+        },
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -65,4 +82,5 @@ export const {
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
   useUpdateAvatarMutation,
+  useAddMemeMutation,
 } = extendedApi;

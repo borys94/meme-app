@@ -29,7 +29,7 @@ const EditRecipeDialog = ({ open, user, handleClose }: Props) => {
 
   const editUser = async () => {
     const response = await updateUserRequest({
-      id: user.uid,
+      id: user.id,
       role,
     });
     if ("data" in response) {

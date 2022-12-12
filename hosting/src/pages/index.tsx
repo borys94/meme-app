@@ -5,6 +5,7 @@ import Tabs from "@components/common/Tabs";
 import MemeCreator from "@components/MemeCreator";
 import FavouritesMemes from "@components/FavouritesMemes";
 import PopularMemes from "@components/PopularMemes";
+import MyMemes from "@components/MyMemes";
 
 import { TemplateModel } from "@shared/models/template";
 
@@ -30,6 +31,10 @@ export default function IndexPage() {
             {
               label: "Favourites",
               render: () => <FavouritesMemes />,
+            },
+            {
+              label: "My memes",
+              render: () => <MyMemes />,
             },
           ]}
         />

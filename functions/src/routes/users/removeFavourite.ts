@@ -9,7 +9,7 @@ const router = express.Router();
 router.delete("/:id/favourites/:templateId", async function(req: Request, res: Response) {
   const {templateId} = req.params;
 
-  await firebase.firestore.collection(COLLECTIONS.USERS).doc(req.currentUser!.uid).collection(COLLECTIONS.FAVOURITES).doc(templateId).delete();
+  await firebase.firestore.collection(COLLECTIONS.USERS).doc(req.currentUser!.id!).collection(COLLECTIONS.FAVOURITES).doc(templateId).delete();
   res.status(200).send({
     data: "",
   });

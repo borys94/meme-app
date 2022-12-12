@@ -19,7 +19,7 @@ const axiosBaseQuery =
       const result = await axios({ url, method, data, params });
       if ("error" in result) {
         return {
-          error: (result as any).error,
+          error: result.data,
         };
       }
 

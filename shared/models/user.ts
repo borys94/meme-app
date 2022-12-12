@@ -1,10 +1,14 @@
 export interface UserModel {
-  uid: string;
+  id?: string;
   email: string;
   createdAt: number;
   role: USER_ROLES;
-  avatarUrl: string;
-  avatarId: string;
+  avatar: Avatar | null;
+}
+
+interface Avatar {
+  url: string;
+  id: string;
 }
 
 export enum USER_ROLES {

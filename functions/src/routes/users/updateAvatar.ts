@@ -13,17 +13,21 @@ import {NotAuthorizedError} from "../../errors";
 const router = express.Router();
 
 router.put("/:id/avatar", async function(req: Request, res: Response) {
-  if (req.params.id !== req.currentUser!.uid) {
+  if (req.params.id !== req.currentUser!.id) {
     throw new NotAuthorizedError();
   }
   const [buffer, ext] = base64ToBuffer(req.body.image);
   const avatarId = `avatars/${crypto.randomUUID()}.${ext}`;
   const url = await createPublicFile(buffer, avatarId);
-  await deletePublicFile(req.currentUser!.avatarId);
+  if (req.currentUser!.avatar) {
+    await deletePublicFile(req.currentUser!.avatar.id);
+  }
 
   const updatedValues: Partial<UserModel> = {
-    avatarUrl: url,
-    avatarId: avatarId,
+    avatar: {
+      url,
+      id: avatarId,
+    },
   };
 
   await firebase.firestore.collection(COLLECTIONS.USERS).doc(req.params.id).update(updatedValues);

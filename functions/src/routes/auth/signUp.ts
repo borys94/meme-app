@@ -4,7 +4,7 @@ import firebase from "../../services/firebaseService";
 import {COLLECTIONS} from "../../../../shared/models/collections";
 
 import {FirebaseAuthError} from "../../errors";
-import {USER_ROLES} from "../../../../shared/models/user";
+import {UserModel, USER_ROLES} from "../../../../shared/models/user";
 
 // eslint-disable-next-line
 const router = express.Router();
@@ -22,12 +22,14 @@ router.post("/signUp", async function(req: Request, res: Response) {
     throw new FirebaseAuthError(e);
   }
 
-  await firebase.firestore.collection(COLLECTIONS.USERS).doc(user.uid).set({
+  const firestoreUser: UserModel = {
     email,
-    uid: user.uid,
+    id: user.uid,
     createdAt: Date.now(),
     role: USER_ROLES.USER,
-  });
+    avatar: null,
+  };
+  await firebase.firestore.collection(COLLECTIONS.USERS).doc(user.uid).set(firestoreUser);
 
   res.status(200).send({
     data: user.uid,

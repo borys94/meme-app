@@ -69,7 +69,7 @@ export default function TemplatesTable() {
         {templates?.map((template) => (
           <Box
             position="relative"
-            key={template.uid}
+            key={template.id}
             onClick={() => openEditTemplateModal(template)}
           >
             <img src={template.url} width={128} />
