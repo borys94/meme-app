@@ -3,45 +3,47 @@ import { TemplateModel, TemplateText } from "@shared/models/template";
 import { useEffect, useState, useRef } from "react";
 import TextEditor from "./TextEditor";
 import { CANVAS_WIDTH } from "src/constants";
+import canvasUtils from "@utils/canvas";
 
 interface Props {
   template: TemplateModel | null;
   texts: TemplateText[];
   onChange: (texts: TemplateText[]) => void;
+  onTextRefs?: (elements: Element[]) => void;
 }
 
-const TemplateEditor = ({ template, texts, onChange }: Props) => {
+const TemplateEditor = ({ template, texts, onChange, onTextRefs }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const [textRefs, setTextRefs] = useState<Element[]>([]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const drawImage = async () => {
+      await canvasUtils.drawImageOnCanvas(canvasRef.current, template.url);
+      setHeight(canvasRef.current.height);
+      setWidth(canvasRef.current.width);
+    };
 
-    const image = new Image();
-    image.crossOrigin = "anonymous";
-    image.src = template.url;
-
-    image.addEventListener("load", () => {
-      const factor = image.width / CANVAS_WIDTH / 2;
-      canvas.height = image.height / factor;
-      setWidth(image.width / factor);
-      setHeight(image.height / factor);
-      ctx.drawImage(image, 0, 0, image.width / factor, image.height / factor);
-    });
-  }, [template]);
-
-  useEffect(() => {
     if (template) {
       onChange([...template.texts]);
+      drawImage();
     }
   }, [template]);
 
   const handleTextChange = (text: TemplateText, index: number) => {
     texts[index] = text;
     onChange([...texts]);
+  };
+
+  const setTextEditorRef = (ref: HTMLElement, index: number) => {
+    textRefs[index] = ref;
+    setTextRefs(textRefs);
+    onTextRefs && onTextRefs(textRefs);
+  };
+
+  const onDelete = (index: number) => {
+    onChange(texts.filter((t, i) => i !== index));
   };
 
   return (
@@ -59,12 +61,16 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
         />
         {texts?.map((text, index) => (
           <TextEditor
+            innerRef={(el) => setTextEditorRef(el, index)}
             height={height / 2}
             width={width / 2}
             text={text}
-            initialLabel={template.texts[index]?.text || texts[index].text}
+            initialLabel={
+              template.texts[index]?.text || (texts && texts[index].text)
+            }
             onChange={(text) => handleTextChange(text, index)}
-            key={index}
+            onDelete={() => onDelete(index)}
+            key={template.id + index}
           />
         ))}
       </Box>

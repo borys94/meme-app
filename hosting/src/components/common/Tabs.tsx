@@ -50,13 +50,9 @@ export default function TabsComponent({ items }: Props) {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box width="100%">
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
+        <Tabs value={value} onChange={handleChange} aria-label="tabs">
           {items.map((item, index) => (
             <Tab key={item.label} label={item.label} {...a11yProps(index)} />
           ))}

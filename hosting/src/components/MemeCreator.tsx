@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 
-import { Stack, Box, Divider, IconButton } from "@mui/material";
+import { Stack, Box, Divider, IconButton, Button } from "@mui/material";
 import { useCollectionData, QUERIES } from "@services/queries";
 import { TemplateModel, TemplateText } from "@shared/models/template";
 
@@ -18,6 +18,7 @@ import LoaderButton from "@components/common/LoaderButton";
 
 import generateMeme from "@utils/generateMeme";
 import canvasUtils from "@utils/canvas";
+import { createEmptyText } from "@utils/createEmptyText";
 
 interface Props {
   template: TemplateModel | null;
@@ -26,7 +27,7 @@ interface Props {
 export default function MemeCreator({ template }: Props) {
   const { user } = useContext(AppContext);
   const [texts, setTexts] = useState<TemplateText[]>([]);
-
+  const [textRefs, setTextRefs] = useState<Element[]>([]);
   const [favourites] = useCollectionData<TemplateModel>(
     QUERIES.GET_FAVOURITES,
     {
@@ -55,11 +56,7 @@ export default function MemeCreator({ template }: Props) {
   };
 
   const generate = async () => {
-    const textEl = document.querySelectorAll(
-      ".editable-text"
-    ) as any as Element[];
-
-    const canvas = await generateMeme(template, textEl);
+    const canvas = await generateMeme(template, textRefs);
     if (user) {
       await addMemeRequest({
         userId: user.id,
@@ -70,6 +67,10 @@ export default function MemeCreator({ template }: Props) {
     canvasUtils.download(canvas);
   };
 
+  const onTextRefs = (textRefs: Element[]) => {
+    setTextRefs(textRefs);
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Divider sx={{ mb: 2 }} />
@@ -78,11 +79,12 @@ export default function MemeCreator({ template }: Props) {
           <Stack direction="row" gap={4}>
             <TemplateEditor
               template={template}
+              onTextRefs={onTextRefs}
               texts={texts}
               onChange={setTexts}
             />
             <Stack flexGrow={1} justifyContent="flex-start">
-              <Box sx={{ margin: "20px auto" }}>
+              <Stack sx={{ margin: "20px auto" }} gap={2}>
                 <LoaderButton
                   size="large"
                   variant="contained"
@@ -91,7 +93,20 @@ export default function MemeCreator({ template }: Props) {
                 >
                   Generate
                 </LoaderButton>
-              </Box>
+                <Button
+                  variant="outlined"
+                  onClick={() =>
+                    setTexts([
+                      ...texts,
+                      createEmptyText(
+                        texts.length ? texts[texts.length - 1] : null
+                      ),
+                    ])
+                  }
+                >
+                  Add text
+                </Button>
+              </Stack>
               {user && (
                 <Stack
                   direction="row"

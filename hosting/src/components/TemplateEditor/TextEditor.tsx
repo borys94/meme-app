@@ -1,6 +1,3 @@
-import { Box } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { TemplateText, TemplateTextStyles } from "@shared/models/template";
 import {
   useState,
   useEffect,
@@ -8,75 +5,12 @@ import {
   MouseEvent,
   FormEvent,
 } from "react";
+import { Box } from "@mui/material";
+
+import { TemplateText, TemplateTextStyles } from "@shared/models/template";
 
 import Toolbar from "./Toolbar";
-
-interface ResizeButtonProps {
-  left?: boolean;
-  right?: boolean;
-  top?: boolean;
-  bottom?: boolean;
-}
-
-const DragElements = styled("div")<{ show?: boolean }>(({ show }) => ({
-  display: show ? "block" : "none",
-}));
-
-const ResizeButton = styled("div")<ResizeButtonProps>(
-  ({ left, right, top, bottom, theme }) => ({
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    ...(left ? { left: -16 } : {}),
-    ...(right ? { right: -16 } : {}),
-    ...(bottom ? { bottom: -16 } : {}),
-    ...(top ? { top: -16 } : {}),
-    cursor: "pointer",
-    position: "absolute",
-    backgroundColor: theme.palette.primary.main,
-  })
-);
-
-const DRAG_BORDER_SIZE = 5;
-
-const DragBorder = styled("div")<ResizeButtonProps>(
-  ({ left, right, top, bottom }) => ({
-    ...(left
-      ? {
-          height: "100%",
-          width: DRAG_BORDER_SIZE,
-          left: -DRAG_BORDER_SIZE,
-          top: 0,
-        }
-      : {}),
-    ...(right
-      ? {
-          height: "100%",
-          width: DRAG_BORDER_SIZE,
-          right: -DRAG_BORDER_SIZE,
-          top: 0,
-        }
-      : {}),
-    ...(bottom
-      ? {
-          height: DRAG_BORDER_SIZE,
-          width: "100%",
-          bottom: -DRAG_BORDER_SIZE,
-        }
-      : {}),
-    ...(top
-      ? {
-          height: DRAG_BORDER_SIZE,
-          width: "100%",
-          top: -DRAG_BORDER_SIZE,
-        }
-      : {}),
-    position: "absolute",
-    opacity: "0.5",
-    cursor: "grab",
-    userSelect: "none",
-  })
-);
+import { DragElements, ResizeButton, DragBorder } from "./styles";
 
 enum DragType {
   Drag = 1,
@@ -87,19 +21,23 @@ enum DragType {
 }
 
 interface Props {
+  innerRef: (el: HTMLElement) => void;
   text: TemplateText;
   width: number;
   height: number;
   initialLabel: string;
   onChange: (text: TemplateText) => void;
+  onDelete: () => void;
 }
 
 export default function Text({
+  innerRef,
   text,
   width,
   height,
   initialLabel,
   onChange,
+  onDelete,
 }: Props) {
   const [label, setLabel] = useState("");
   const [active, setActive] = useState(false);
@@ -117,7 +55,7 @@ export default function Text({
 
   useEffect(() => {
     setLabel(initialLabel || "");
-  }, [initialLabel]);
+  }, []);
 
   const onPointerDown = (dragType: DragType) => (e: ReactPointerEvent) => {
     setDragType(dragType);
@@ -261,9 +199,14 @@ export default function Text({
         }}
       >
         {(active || !!dragType) && (
-          <Toolbar onChange={handleToolbarChange} {...text.styles} />
+          <Toolbar
+            onChange={handleToolbarChange}
+            onDelete={onDelete}
+            {...text.styles}
+          />
         )}
         <div
+          ref={innerRef}
           contentEditable
           onInput={handleTextChange}
           suppressContentEditableWarning={true}

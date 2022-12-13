@@ -22,28 +22,7 @@ import {
   TemplateText,
   TEMPLATE_STATUS,
 } from "@shared/models/template";
-
-const emptyText: TemplateText = {
-  topLeft: {
-    x: 0,
-    y: 0,
-  },
-  text: "Type here",
-  bottomRight: {
-    x: 100,
-    y: 50,
-  },
-  styles: {
-    fontFamily: "Arial",
-    fontSize: 40,
-    bold: false,
-    italic: false,
-    underline: false,
-    color: "#000000",
-    shadowColor: "#ffffff",
-    textAlign: "center",
-  },
-};
+import { createEmptyText } from "@utils/createEmptyText";
 
 interface Props {
   open: boolean;
@@ -130,7 +109,14 @@ const EditMemeDialog = ({ open, template, handleClose }: Props) => {
                 </FormGroup>
                 <Button
                   variant="contained"
-                  onClick={() => setTexts([...texts, emptyText])}
+                  onClick={() =>
+                    setTexts([
+                      ...texts,
+                      createEmptyText(
+                        texts.length ? texts[texts.length - 1] : null
+                      ),
+                    ])
+                  }
                 >
                   Add text
                 </Button>

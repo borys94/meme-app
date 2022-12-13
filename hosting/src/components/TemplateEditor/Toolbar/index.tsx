@@ -3,6 +3,7 @@ import { Box, Stack, Paper } from "@mui/material";
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { TemplateTextStyles } from "@shared/models/template";
 
@@ -14,11 +15,12 @@ import TextAlignButton from "./TextAlignButton";
 
 interface Props extends TemplateTextStyles {
   onChange: (styles: TemplateTextStyles) => void;
+  onDelete: () => void;
 }
 
-const Toolbar = ({ onChange, ...textStyles }: Props) => {
+const Toolbar = ({ onChange, onDelete, ...textStyles }: Props) => {
   return (
-    <Box position="absolute" top={-90}>
+    <Box position="absolute" top={-90} zIndex={10}>
       <Stack gap={1} alignItems="baseline" direction="row">
         <Paper elevation={4} sx={{ display: "flex", my: 2 }}>
           <FontButton
@@ -62,6 +64,9 @@ const Toolbar = ({ onChange, ...textStyles }: Props) => {
             textAlign={textStyles.textAlign}
             onChange={(textAlign) => onChange({ ...textStyles, textAlign })}
           />
+          <Button onClick={onDelete}>
+            <DeleteIcon fontSize="large" />
+          </Button>
         </Paper>
       </Stack>
     </Box>

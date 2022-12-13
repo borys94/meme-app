@@ -4,6 +4,7 @@ import { Box, Stack } from "@mui/material";
 import { useCollectionData, QUERIES } from "@services/queries";
 import { MemeModel } from "@shared/models/meme";
 import { AppContext } from "@components/AppContextProvider";
+import RequiredSignedIn from "@components/common/RequiredSignedIn";
 
 const MyMemes = () => {
   const { user } = useContext(AppContext);
@@ -12,13 +13,15 @@ const MyMemes = () => {
   });
 
   return (
-    <Stack gap={2} direction="row" overflow="auto" sx={{ py: 2 }}>
-      {memes?.map((meme) => (
-        <Box sx={{ cursor: "pointer" }} key={meme.id}>
-          <img src={meme.url} alt="meme" style={{ maxHeight: 128 }} />
-        </Box>
-      ))}
-    </Stack>
+    <RequiredSignedIn message="Sign in to save your memes">
+      <Stack gap={2} padding={2} direction="row" overflow="auto">
+        {memes?.map((meme) => (
+          <Box sx={{ cursor: "pointer" }} key={meme.id}>
+            <img src={meme.url} alt="meme" style={{ maxHeight: 128 }} />
+          </Box>
+        ))}
+      </Stack>
+    </RequiredSignedIn>
   );
 };
 
