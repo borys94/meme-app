@@ -10,6 +10,7 @@
   ],
   "hosting": {
     "source": "hosting",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
