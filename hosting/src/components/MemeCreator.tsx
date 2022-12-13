@@ -92,27 +92,33 @@ export default function MemeCreator({ template }: Props) {
                   Generate
                 </LoaderButton>
               </Box>
-              <Stack direction="row" marginTop="auto" justifyContent="flex-end">
-                {favourites.find(
-                  (favourite) => favourite.id === template.id
-                ) ? (
-                  <IconButton
-                    disabled={isRemoveFavouriteLoading}
-                    color="error"
-                    onClick={removeFavourite}
-                  >
-                    <FavoriteIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    disabled={isAddFavouriteLoading}
-                    color="error"
-                    onClick={() => addFavourite()}
-                  >
-                    <FavoriteBorderIcon />
-                  </IconButton>
-                )}
-              </Stack>
+              {user && (
+                <Stack
+                  direction="row"
+                  marginTop="auto"
+                  justifyContent="flex-end"
+                >
+                  {favourites.find(
+                    (favourite) => favourite.id === template.id
+                  ) ? (
+                    <IconButton
+                      disabled={isRemoveFavouriteLoading}
+                      color="error"
+                      onClick={removeFavourite}
+                    >
+                      <FavoriteIcon />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      disabled={isAddFavouriteLoading}
+                      color="error"
+                      onClick={() => addFavourite()}
+                    >
+                      <FavoriteBorderIcon />
+                    </IconButton>
+                  )}
+                </Stack>
+              )}
             </Stack>
           </Stack>
         </Box>
