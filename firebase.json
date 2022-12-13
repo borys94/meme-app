@@ -9,7 +9,7 @@
     }
   ],
   "hosting": {
-    "public": ".next",
+    "public": "hosting/.next",
     "ignore": [
       "firebase.json",
       "**/.*",
