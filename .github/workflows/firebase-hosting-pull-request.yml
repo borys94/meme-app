@@ -16,6 +16,8 @@ jobs:
       NEXT_PUBLIC_APP_ID: "${{ secrets.NEXT_PUBLIC_APP_ID }}"
       NEXT_PUBLIC_MEASUREMENT_ID: "${{ secrets.NEXT_PUBLIC_MEASUREMENT_ID }}"
       NEXT_PUBLIC_PUBLIC_API_URL: "${{ secrets.NEXT_PUBLIC_PUBLIC_API_URL }}"
+      FIREBASE_SERVICE_ACCOUNT_MEME_APP_9CF46: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_MEME_APP_9CF46 }}"
+      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
     steps:
       - uses: actions/checkout@v2
       - name: install
@@ -24,8 +26,6 @@ jobs:
       - name: build
         working-directory: ./hosting
         run: npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MEME_APP_9CF46 }}'
-          projectId: meme-app-9cf46
+      - name: deploy
+        working-directory: ./hosting
+        run: npm run deploy
