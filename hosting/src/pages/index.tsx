@@ -14,7 +14,9 @@ export default function IndexPage() {
     null
   );
   const handleTemplateClick = (template: TemplateModel) => {
-    setCurrentTemplate(template);
+    if (template.id !== currentTemplate.id) {
+      setCurrentTemplate(template);
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -31,6 +31,7 @@ interface Props {
 }
 
 const EditMemeDialog = ({ open, template, handleClose }: Props) => {
+  const textRefs = useRef([]);
   const [status, setStatus] = useState<TEMPLATE_STATUS>(
     TEMPLATE_STATUS.PUBLISHED
   );
@@ -76,6 +77,7 @@ const EditMemeDialog = ({ open, template, handleClose }: Props) => {
               <TemplateEditor
                 template={template}
                 texts={texts}
+                textRefs={textRefs}
                 onChange={handleTextChange}
               />
             </Box>

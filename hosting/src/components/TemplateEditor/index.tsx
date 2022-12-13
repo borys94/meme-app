@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
+
 import { TemplateModel, TemplateText } from "@shared/models/template";
 import { useEffect, useState, useRef } from "react";
 import TextEditor from "./TextEditor";
@@ -8,15 +9,14 @@ import canvasUtils from "@utils/canvas";
 interface Props {
   template: TemplateModel | null;
   texts: TemplateText[];
+  textRefs: React.MutableRefObject<any[]>;
   onChange: (texts: TemplateText[]) => void;
-  onTextRefs?: (elements: Element[]) => void;
 }
 
-const TemplateEditor = ({ template, texts, onChange, onTextRefs }: Props) => {
+const TemplateEditor = ({ template, texts, textRefs, onChange }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const [textRefs, setTextRefs] = useState<Element[]>([]);
 
   useEffect(() => {
     const drawImage = async () => {
@@ -36,32 +36,32 @@ const TemplateEditor = ({ template, texts, onChange, onTextRefs }: Props) => {
     onChange([...texts]);
   };
 
-  const setTextEditorRef = (ref: HTMLElement, index: number) => {
-    textRefs[index] = ref;
-    setTextRefs(textRefs);
-    onTextRefs && onTextRefs(textRefs);
-  };
-
   const onDelete = (index: number) => {
     onChange(texts.filter((t, i) => i !== index));
   };
 
+  useEffect(() => {
+    textRefs.current = textRefs.current.slice(0, texts.length);
+  }, [texts]);
+
   return (
     <Box position="relative">
       <Box position="relative">
-        <canvas
-          ref={canvasRef}
-          style={{
-            width: CANVAS_WIDTH,
-            height: "auto",
-            boxShadow: "1px 1px 3px #ccc",
-          }}
-          width={CANVAS_WIDTH * 2}
-          height={CANVAS_WIDTH * 2}
-        />
+        <Stack direction="row">
+          <canvas
+            ref={canvasRef}
+            style={{
+              width: CANVAS_WIDTH,
+              height: "auto",
+              boxShadow: "1px 1px 3px #ccc",
+            }}
+            width={CANVAS_WIDTH * 2}
+            height={CANVAS_WIDTH * 2}
+          />
+        </Stack>
         {texts?.map((text, index) => (
           <TextEditor
-            innerRef={(el) => setTextEditorRef(el, index)}
+            innerRef={(el) => (textRefs.current[texts.length - index - 1] = el)}
             height={height / 2}
             width={width / 2}
             text={text}
@@ -70,6 +70,7 @@ const TemplateEditor = ({ template, texts, onChange, onTextRefs }: Props) => {
             }
             onChange={(text) => handleTextChange(text, index)}
             onDelete={() => onDelete(index)}
+            id={template.id + index}
             key={template.id + index}
           />
         ))}
