@@ -18,6 +18,7 @@ import { useAddTemplateMutation } from "@stores/api/admin";
 import { TEMPLATE_STATUS } from "@shared/models/template";
 
 import fileToBase64 from "@utils/fileToBase64";
+import { CANVAS_WIDTH } from "src/constants";
 
 interface Props {
   open: boolean;
@@ -78,7 +79,9 @@ const AddMemeDialog = ({ open, handleClose }: Props) => {
         </Button>
         {fileSrc && (
           <Stack direction="row" gap={2}>
-            {fileSrc && <img src={fileSrc} style={{ maxWidth: "512px" }} />}
+            {fileSrc && (
+              <img src={fileSrc} style={{ maxWidth: CANVAS_WIDTH }} />
+            )}
             <Stack>
               <TextField
                 fullWidth

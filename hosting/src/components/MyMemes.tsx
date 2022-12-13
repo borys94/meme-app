@@ -8,11 +8,11 @@ import { AppContext } from "@components/AppContextProvider";
 const MyMemes = () => {
   const { user } = useContext(AppContext);
   const [memes] = useCollectionData<MemeModel>(QUERIES.GET_USER_MEMES, {
-    userId: user.id,
+    userId: user?.id,
   });
 
   return (
-    <Stack gap={2} direction="row">
+    <Stack gap={2} direction="row" overflow="auto" sx={{ py: 2 }}>
       {memes?.map((meme) => (
         <Box sx={{ cursor: "pointer" }} key={meme.id}>
           <img src={meme.url} alt="meme" style={{ maxHeight: 128 }} />

@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 
-import { Stack, Box, Divider, IconButton, Button } from "@mui/material";
+import { Stack, Box, Divider, IconButton } from "@mui/material";
 import { useCollectionData, QUERIES } from "@services/queries";
 import { TemplateModel, TemplateText } from "@shared/models/template";
 
@@ -14,8 +14,10 @@ import {
 } from "@stores/api/user";
 import { AppContext } from "@components/AppContextProvider";
 import TemplateEditor from "@components/TemplateEditor";
+import LoaderButton from "@components/common/LoaderButton";
 
 import generateMeme from "@utils/generateMeme";
+import canvasUtils from "@utils/canvas";
 
 interface Props {
   template: TemplateModel | null;
@@ -35,7 +37,8 @@ export default function MemeCreator({ template }: Props) {
     useAddFavouriteMutation();
   const [removeFavouriteRequest, { isLoading: isRemoveFavouriteLoading }] =
     useRemoveFavouriteMutation();
-  const [addMemeRequest] = useAddMemeMutation();
+  const [addMemeRequest, { isLoading: isAddMemeLoading }] =
+    useAddMemeMutation();
 
   const addFavourite = () => {
     addFavouriteRequest({
@@ -56,12 +59,15 @@ export default function MemeCreator({ template }: Props) {
       ".editable-text"
     ) as any as Element[];
 
-    const image = await generateMeme(template, textEl);
-    addMemeRequest({
-      userId: user.id,
-      templateId: template.id,
-      image,
-    });
+    const canvas = await generateMeme(template, textEl);
+    if (user) {
+      await addMemeRequest({
+        userId: user.id,
+        templateId: template.id,
+        image: canvas.toDataURL(),
+      });
+    }
+    canvasUtils.download(canvas);
   };
 
   return (
@@ -76,10 +82,15 @@ export default function MemeCreator({ template }: Props) {
               onChange={setTexts}
             />
             <Stack flexGrow={1} justifyContent="flex-start">
-              <Box>
-                <Button variant="contained" onClick={generate}>
+              <Box sx={{ margin: "20px auto" }}>
+                <LoaderButton
+                  size="large"
+                  variant="contained"
+                  onClick={generate}
+                  loader={isAddMemeLoading}
+                >
                   Generate
-                </Button>
+                </LoaderButton>
               </Box>
               <Stack direction="row" marginTop="auto" justifyContent="flex-end">
                 {favourites.find(
@@ -104,7 +115,6 @@ export default function MemeCreator({ template }: Props) {
               </Stack>
             </Stack>
           </Stack>
-          <Divider />
         </Box>
       )}
     </Box>

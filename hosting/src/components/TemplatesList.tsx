@@ -8,7 +8,13 @@ interface Props {
 
 const TemplatesList = ({ templates, handleTemplateClick }: Props) => {
   return (
-    <Stack gap={2} direction="row" height={64}>
+    <Stack
+      gap={2}
+      direction="row"
+      height={96}
+      overflow="auto"
+      sx={{ py: 2, px: 1 }}
+    >
       {templates?.map((template) => (
         <Box
           sx={{
@@ -21,7 +27,7 @@ const TemplatesList = ({ templates, handleTemplateClick }: Props) => {
           onClick={() => handleTemplateClick(template)}
           key={template.id}
         >
-          <img src={template.url} alt="meme" style={{ maxHeight: 64 }} />
+          <img src={template.url} alt="meme" style={{ height: 64 }} />
         </Box>
       ))}
     </Stack>

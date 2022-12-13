@@ -31,7 +31,9 @@ export default function MyApp(props) {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <GlobalStyles styles={{ a: { textDecoration: "none" } }} />
+          <GlobalStyles
+            styles={{ a: { textDecoration: "none", color: "initial" } }}
+          />
           <AppContextProvider>
             <AppBar />
             <Container sx={{ mb: 2, minHeight: "calc(100vh - 200px)" }}>

@@ -1,7 +1,8 @@
 import { Box } from "@mui/material";
 import { TemplateModel, TemplateText } from "@shared/models/template";
 import { useEffect, useState, useRef } from "react";
-import Text from "./TextEditor";
+import TextEditor from "./TextEditor";
+import { CANVAS_WIDTH } from "src/constants";
 
 interface Props {
   template: TemplateModel | null;
@@ -24,7 +25,7 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
     image.src = template.url;
 
     image.addEventListener("load", () => {
-      const factor = image.width / 512 / 2;
+      const factor = image.width / CANVAS_WIDTH / 2;
       canvas.height = image.height / factor;
       setWidth(image.width / factor);
       setHeight(image.height / factor);
@@ -45,18 +46,21 @@ const TemplateEditor = ({ template, texts, onChange }: Props) => {
 
   return (
     <Box position="relative">
-      {/* <Toolbar /> */}
       <Box position="relative">
         <canvas
           ref={canvasRef}
-          style={{ width: 512, height: "auto", boxShadow: "1px 1px 3px #ccc" }}
-          width={512 * 2}
-          height={512 * 2}
+          style={{
+            width: CANVAS_WIDTH,
+            height: "auto",
+            boxShadow: "1px 1px 3px #ccc",
+          }}
+          width={CANVAS_WIDTH * 2}
+          height={CANVAS_WIDTH * 2}
         />
         {texts?.map((text, index) => (
-          <Text
-            height={(height || 0) / 2}
-            width={(width || 0) / 2}
+          <TextEditor
+            height={height / 2}
+            width={width / 2}
             text={text}
             initialLabel={template.texts[index]?.text || texts[index].text}
             onChange={(text) => handleTextChange(text, index)}

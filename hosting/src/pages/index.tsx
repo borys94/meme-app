@@ -30,7 +30,9 @@ export default function IndexPage() {
             },
             {
               label: "Favourites",
-              render: () => <FavouritesMemes />,
+              render: () => (
+                <FavouritesMemes handleTemplateClick={handleTemplateClick} />
+              ),
             },
             {
               label: "My memes",

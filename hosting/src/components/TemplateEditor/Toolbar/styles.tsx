@@ -11,7 +11,12 @@ export const Button = styled("div")<{ active?: boolean }>(
     transition: "all 150ms",
     backgroundColor: active && theme.palette.primary.main,
     ":hover": {
-      backgroundColor: "#eee",
+      backgroundColor: active ? theme.palette.primary.main : "#eee",
+      ...(active
+        ? {
+            filter: "brightness(95%)",
+          }
+        : {}),
     },
   })
 );

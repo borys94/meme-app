@@ -14,6 +14,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
 
 import { AppContext } from "@components/AppContextProvider";
 import { auth } from "../FirebaseConfig";
@@ -50,7 +51,7 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 0, ml: "auto" }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Avatar" src={user?.avatarUrl} />
+                  <Avatar alt="Avatar" src={user?.avatar?.url} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -80,6 +81,7 @@ function ResponsiveAppBar() {
                     </MenuItem>
                   </Link>
                 )}
+                <Divider />
                 <MenuItem onClick={handleSignOut}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
