@@ -23,9 +23,10 @@ jobs:
       - name: install
         working-directory: ./hosting
         run: npm install
+      - name: lint
+        working-directory: ./hosting
+        run: npm run lint
       - name: build
         working-directory: ./hosting
         run: npm run build
-      - name: build
-        working-directory: ./hosting
-        run: npm run lint
+      
