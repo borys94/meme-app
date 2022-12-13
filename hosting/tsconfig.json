@@ -15,14 +15,14 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types", "./shared/models/*"],
+    "typeRoots": ["./node_modules/@types", "../shared/models/*"],
     
     "paths": {
       "@components/*": ["src/components/*"],
       "@services/*": ["src/services/*"],
       "@stores/*": ["src/stores/*"],
-      "@shared/*": ["shared/*"],
-      "@models/*": ["shared/models/*"],
+      "@shared/*": ["../shared/*"],
+      "@models/*": ["../shared/models/*"],
       "@utils/*": ["src/utils/*"],
     },
   },

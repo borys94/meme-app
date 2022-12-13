@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import fs from "fs";
 
-import { COLLECTIONS } from "../shared/models/collections";
+import { COLLECTIONS } from "../../shared/models/collections";
 
 let testEnv: RulesTestEnvironment;
 
