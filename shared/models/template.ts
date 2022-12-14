@@ -3,6 +3,7 @@ export interface TemplateModel {
   status: TEMPLATE_STATUS;
   title: string;
   url: string;
+  likes: number;
   createdAt: number;
   texts: TemplateText[];
 }

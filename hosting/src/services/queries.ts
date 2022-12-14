@@ -6,6 +6,7 @@ import {
   doc,
   DocumentReference,
   Query,
+  orderBy,
 } from "firebase/firestore";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 
@@ -63,7 +64,7 @@ const getUsers = () => {
 };
 
 const getTemplates = ({ status }: { status?: TEMPLATE_STATUS }) => {
-  const constraints = [];
+  const constraints = [orderBy("likes", "desc"), orderBy("createdAt", "desc")];
   if (status) {
     constraints.push(where("status", "==", status));
   }

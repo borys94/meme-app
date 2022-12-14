@@ -4,7 +4,7 @@ import { Popover, List, ListItem, ListItemButton } from "@mui/material";
 import { TemplateTextStyles } from "@shared/models/template";
 import { FontButton as Button } from "./styles";
 
-const FONTS = ["Arial", "Impact", "Verdana", "Courier"];
+const FONTS = ["Arial", "Impact", "Verdana", "Comic Sans MS", "Courier"];
 
 interface Props {
   fontFamily: TemplateTextStyles["fontFamily"];

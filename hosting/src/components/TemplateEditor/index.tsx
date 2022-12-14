@@ -3,7 +3,7 @@ import { Box, Stack } from "@mui/material";
 import { TemplateModel, TemplateText } from "@shared/models/template";
 import { useEffect, useState, useRef } from "react";
 import TextEditor from "./TextEditor";
-import { CANVAS_WIDTH } from "src/constants";
+import { CANVAS_WIDTH } from "@src/constants";
 import canvasUtils from "@utils/canvas";
 
 interface Props {
@@ -70,7 +70,6 @@ const TemplateEditor = ({ template, texts, textRefs, onChange }: Props) => {
             }
             onChange={(text) => handleTextChange(text, index)}
             onDelete={() => onDelete(index)}
-            id={template.id + index}
             key={template.id + index}
           />
         ))}

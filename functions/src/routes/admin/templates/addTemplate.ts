@@ -22,6 +22,7 @@ router.post("/", async function(req: Request, res: Response) {
     title,
     url,
     status,
+    likes: 0,
     texts: [],
     createdAt: Date.now(),
   };

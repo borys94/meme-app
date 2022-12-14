@@ -18,7 +18,7 @@ import { useAddTemplateMutation } from "@stores/api/admin";
 import { TEMPLATE_STATUS } from "@shared/models/template";
 
 import fileToBase64 from "@utils/fileToBase64";
-import { CANVAS_WIDTH } from "src/constants";
+import { CANVAS_WIDTH } from "@src/constants";
 
 interface Props {
   open: boolean;

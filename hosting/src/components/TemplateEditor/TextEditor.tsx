@@ -26,7 +26,6 @@ interface Props {
   width: number;
   height: number;
   initialLabel: string;
-  id: string;
   onChange: (text: TemplateText) => void;
   onDelete: () => void;
 }
@@ -37,7 +36,6 @@ export default function Text({
   width,
   height,
   initialLabel,
-  id,
   onChange,
   onDelete,
 }: Props) {
@@ -60,6 +58,8 @@ export default function Text({
   }, []);
 
   const onPointerDown = (dragType: DragType) => (e: ReactPointerEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     setDragType(dragType);
     setOffsetX(e.pageX);
     setOffsetY(e.pageY);
@@ -212,8 +212,6 @@ export default function Text({
           contentEditable
           onInput={handleTextChange}
           suppressContentEditableWarning={true}
-          className="editable-text"
-          id={id}
           style={{
             width: text.bottomRight.x - text.topLeft.x,
             height: text.bottomRight.y - text.topLeft.y,
@@ -229,6 +227,7 @@ export default function Text({
             textShadow: `${shadowColor} -1px 0px, ${shadowColor} 0px 1px, ${shadowColor} 1px 0px, ${shadowColor} 0px -1px`,
             caretColor: "#4d90fe",
             outline: "0px solid transparent",
+            userSelect: "none",
           }}
         >
           {label}

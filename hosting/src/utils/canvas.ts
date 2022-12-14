@@ -1,4 +1,4 @@
-import { CANVAS_WIDTH } from "src/constants";
+import { CANVAS_WIDTH } from "@src/constants";
 
 const download = (canvas: HTMLCanvasElement) => {
   const link = document.createElement("a");

@@ -25,7 +25,6 @@ import {
 import { AppContext } from "@components/AppContextProvider";
 import TemplateEditor from "@components/TemplateEditor";
 
-import { useCollectionData, QUERIES } from "@services/queries";
 import { TemplateModel, TemplateText } from "@shared/models/template";
 import generateMeme from "@utils/generateMeme";
 import canvasUtils from "@utils/canvas";
@@ -38,14 +37,9 @@ interface Props {
 
 export default function MemeCreator({ template }: Props) {
   const textRefs = useRef([]);
-  const { user } = useContext(AppContext);
+  const [shouldFocusLastInput, setShouldFocusLastInput] = useState(false);
+  const { user, favourites, templates } = useContext(AppContext);
   const [texts, setTexts] = useState<TemplateText[]>([]);
-  const [favourites] = useCollectionData<TemplateModel>(
-    QUERIES.GET_FAVOURITES,
-    {
-      userId: user?.id,
-    }
-  );
   const [addFavouriteRequest, { isLoading: isAddFavouriteLoading }] =
     useAddFavouriteMutation();
   const [removeFavouriteRequest, { isLoading: isRemoveFavouriteLoading }] =
@@ -68,8 +62,8 @@ export default function MemeCreator({ template }: Props) {
   };
 
   const uploadMeme = async () => {
-    const canvas = await getCanvasMeme();
     if (user) {
+      const canvas = await getCanvasMeme();
       await addMemeRequest({
         userId: user.id,
         templateId: template.id,
@@ -91,17 +85,17 @@ export default function MemeCreator({ template }: Props) {
       ...texts,
       createEmptyText(texts.length ? texts[texts.length - 1] : null),
     ]);
+    setShouldFocusLastInput(true);
   };
 
   useEffect(() => {
-    const focusLastInput = async () => {
-      await new Promise<void>((res) => setTimeout(res, 0));
-      if (textRefs.current.length) {
+    if (shouldFocusLastInput) {
+      if (textRefs.current.length && textRefs.current[0]) {
         dispatchMouseDownEvent(textRefs.current[0]);
       }
-    };
-    focusLastInput();
-  }, [textRefs.current]);
+      setShouldFocusLastInput(false);
+    }
+  }, [shouldFocusLastInput]);
 
   return (
     <Box sx={{ width: "100%", mb: 4 }}>
@@ -155,6 +149,7 @@ export default function MemeCreator({ template }: Props) {
                   direction="row"
                   marginTop="auto"
                   justifyContent="flex-start"
+                  alignItems="center"
                   marginLeft={2}
                 >
                   {favourites.find(
@@ -176,6 +171,7 @@ export default function MemeCreator({ template }: Props) {
                       <FavoriteBorderIcon />
                     </IconButton>
                   )}
+                  {templates.find((t) => t.id === template.id).likes}
                 </Stack>
               )}
             </Stack>

@@ -33,6 +33,18 @@ const extendedApi = api.injectEndpoints({
         data: template,
       }),
     }),
+    removeMeme: builder.mutation<
+      string,
+      {
+        userId: string;
+        memeId: string;
+      }
+    >({
+      query: ({ userId, memeId }) => ({
+        url: `/users/${userId}/memes/${memeId}`,
+        method: "delete",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -43,4 +55,5 @@ export const {
   useUpdateUserMutation,
   useAddTemplateMutation,
   useEditTemplateMutation,
+  useRemoveMemeMutation,
 } = extendedApi;
