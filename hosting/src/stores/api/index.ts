@@ -1,6 +1,8 @@
 import axios from "axios";
 import { createApi, BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import { AxiosRequestConfig, AxiosError } from "axios";
+import store from "@stores/index";
+import { addErrorNotification } from "@stores/notifications";
 
 const axiosBaseQuery =
   (): BaseQueryFn<
@@ -15,10 +17,11 @@ const axiosBaseQuery =
   > =>
   async ({ url, method, data, params }) => {
     try {
-      const result = await axios({ url, method, data, params });
-      if ("error" in result) {
+      const result: any = await axios({ url, method, data, params });
+      if (result.error) {
+        store.dispatch(addErrorNotification(result.error));
         return {
-          error: result.data,
+          error: result.error,
         };
       }
 

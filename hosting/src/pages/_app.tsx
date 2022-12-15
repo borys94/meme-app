@@ -12,6 +12,7 @@ import theme from "../theme";
 import createEmotionCache from "../utils/createEmotionCache";
 import AppBar from "@components/AppBar";
 import Footer from "@components/Footer";
+import Notifications from "@components/Notifications";
 import { AppContextProvider } from "@components/AppContextProvider";
 
 import { configureApi } from "@services/api";
@@ -41,6 +42,7 @@ export default function MyApp(props) {
               <Component {...pageProps} />
             </Container>
             <Footer />
+            <Notifications />
           </AppContextProvider>
         </ThemeProvider>
       </Provider>

@@ -16,6 +16,11 @@ app.use(json());
 app.use(cors({
   origin: true,
 }));
+
+app.get("status", (req, res) => {
+  res.sendStatus(200);
+});
+
 app.use(currentUser);
 
 app.use(adminRouter);
