@@ -14,14 +14,45 @@ import FontColorButton from "./FontColorButton";
 import TextAlignButton from "./TextAlignButton";
 
 interface Props extends TemplateTextStyles {
+  scale?: number;
+  fixed?: boolean;
   onChange: (styles: TemplateTextStyles) => void;
   onDelete: () => void;
 }
 
-const Toolbar = ({ onChange, onDelete, ...textStyles }: Props) => {
+const Toolbar = ({
+  scale = 1,
+  fixed = false,
+  onChange,
+  onDelete,
+  ...textStyles
+}: Props) => {
   return (
-    <Box position="absolute" top={-90} zIndex={10}>
-      <Stack gap={1} alignItems="baseline" direction="row">
+    <Box
+      position={fixed ? "fixed" : "absolute"}
+      sx={{
+        ...(fixed
+          ? {
+              bottom: 0,
+              left: 0,
+              right: 0,
+              margin: "auto",
+            }
+          : {
+              top: -90,
+            }),
+        zIndex: 10,
+
+        transform: `scale(${scale})`,
+        transformOrigin: "top left",
+      }}
+    >
+      <Stack
+        gap={1}
+        alignItems="baseline"
+        direction="row"
+        justifyContent="center"
+      >
         <Paper elevation={4} sx={{ display: "flex", my: 2 }}>
           <FontButton
             fontFamily={textStyles.fontFamily}

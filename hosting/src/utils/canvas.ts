@@ -12,7 +12,7 @@ const drawHTMLElementOnCanvas = async (
   element: Element
 ) => {
   const ctx = canvas.getContext("2d");
-  const text = element.outerHTML;
+  const text = element.outerHTML.replaceAll("<br>", "<br></br>");
 
   const data =
     "data:image/svg+xml," +
@@ -40,6 +40,9 @@ const drawHTMLElementOnCanvas = async (
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       el.remove();
       res();
+    };
+    img.onerror = function (e) {
+      console.error(e);
     };
   });
 };

@@ -17,19 +17,34 @@ const TemplateEditor = ({ template, texts, textRefs, onChange }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    window.addEventListener("resize", updateScale);
+    return () => {
+      window.removeEventListener("resize", updateScale);
+    };
+  }, []);
+
+  const updateScale = () => {
+    const { width } = canvasRef.current.getBoundingClientRect();
+    const scale = width / CANVAS_WIDTH;
+    setScale(scale);
+  };
 
   useEffect(() => {
     const drawImage = async () => {
       await canvasUtils.drawImageOnCanvas(canvasRef.current, template.url);
       setHeight(canvasRef.current.height);
       setWidth(canvasRef.current.width);
+      updateScale();
     };
 
     if (template) {
       onChange([...template.texts]);
       drawImage();
     }
-  }, [template]);
+  }, [template?.id]);
 
   const handleTextChange = (text: TemplateText, index: number) => {
     texts[index] = text;
@@ -48,15 +63,20 @@ const TemplateEditor = ({ template, texts, textRefs, onChange }: Props) => {
     <Box position="relative">
       <Box position="relative">
         <Stack direction="row">
-          <canvas
+          <Box
+            component="canvas"
             ref={canvasRef}
-            style={{
-              width: CANVAS_WIDTH,
-              height: "auto",
-              boxShadow: "1px 1px 3px #ccc",
-            }}
             width={CANVAS_WIDTH * 2}
             height={CANVAS_WIDTH * 2}
+            sx={{
+              maxWidth: "100%",
+              height: "auto",
+              boxShadow: "1px 1px 3px #ccc",
+              width: {
+                xs: "100%",
+                md: CANVAS_WIDTH,
+              },
+            }}
           />
         </Stack>
         {texts?.map((text, index) => (
@@ -64,6 +84,7 @@ const TemplateEditor = ({ template, texts, textRefs, onChange }: Props) => {
             innerRef={(el) => (textRefs.current[texts.length - index - 1] = el)}
             height={height / 2}
             width={width / 2}
+            scale={scale}
             text={text}
             initialLabel={
               template.texts[index]?.text || (texts && texts[index].text)

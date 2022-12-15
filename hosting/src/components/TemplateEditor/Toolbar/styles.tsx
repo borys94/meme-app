@@ -10,6 +10,10 @@ export const Button = styled("div")<{ active?: boolean }>(
     alignItems: "center",
     transition: "all 150ms",
     backgroundColor: active && theme.palette.primary.main,
+    [theme.breakpoints.down("sm")]: {
+      width: 42,
+      height: 42,
+    },
     ":hover": {
       backgroundColor: active ? theme.palette.primary.main : "#eee",
       ...(active

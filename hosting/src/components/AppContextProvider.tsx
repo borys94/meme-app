@@ -36,16 +36,14 @@ export const AppContextProvider: FC<AppContextProviderProps> = ({
   children,
 }) => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [roleLoading, setRoleLoading] = useState(true);
 
-  const [firebaseUser, loading] = useAuthState(auth, {
+  const [firebaseUser] = useAuthState(auth, {
     onUserChanged: async (user) => {
       if (user) {
         setIsAdmin((await user.getIdTokenResult())?.claims.role === "admin");
       } else {
         setIsAdmin(false);
       }
-      setRoleLoading(false);
     },
   });
   const [user] = useDocument<UserModel>(QUERIES.GET_USER, {
@@ -63,10 +61,6 @@ export const AppContextProvider: FC<AppContextProviderProps> = ({
       userId: user?.id,
     }
   );
-
-  if (loading || roleLoading || (firebaseUser && !user)) {
-    return <div>Loading</div>;
-  }
 
   return (
     <AppContext.Provider

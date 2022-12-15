@@ -21,6 +21,7 @@ enum QUERIES {
   GET_USER_MEMES = "getUserMemes",
 
   GET_USER = "getUser",
+  GET_TEMPLATE = "getTemplate",
 }
 
 const useQuery = <T = unknown>(
@@ -59,6 +60,13 @@ const getUser = ({ userId }: { userId: string }) => {
   return doc(firestore, COLLECTIONS.USERS, userId);
 };
 
+const getTemplate = ({ templateId }: { templateId: string }) => {
+  if (!templateId) {
+    return null;
+  }
+  return doc(firestore, COLLECTIONS.TEMPLATES, templateId);
+};
+
 const getUsers = () => {
   return query(collection(firestore, COLLECTIONS.USERS));
 };
@@ -94,6 +102,7 @@ const firebaseQueries: Record<QUERIES, (params?: unknown) => unknown> = {
   [QUERIES.GET_TEMPLATES]: getTemplates,
   [QUERIES.GET_FAVOURITES]: getFavourites,
   [QUERIES.GET_USER]: getUser,
+  [QUERIES.GET_TEMPLATE]: getTemplate,
   [QUERIES.GET_USER_MEMES]: getUserMemes,
 };
 

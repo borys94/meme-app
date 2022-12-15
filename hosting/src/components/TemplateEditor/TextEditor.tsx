@@ -2,10 +2,10 @@ import {
   useState,
   useEffect,
   PointerEvent as ReactPointerEvent,
-  MouseEvent,
   FormEvent,
 } from "react";
 import { Box } from "@mui/material";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 import { TemplateText, TemplateTextStyles } from "@shared/models/template";
 
@@ -26,6 +26,7 @@ interface Props {
   width: number;
   height: number;
   initialLabel: string;
+  scale: number;
   onChange: (text: TemplateText) => void;
   onDelete: () => void;
 }
@@ -36,6 +37,7 @@ export default function Text({
   width,
   height,
   initialLabel,
+  scale,
   onChange,
   onDelete,
 }: Props) {
@@ -92,7 +94,7 @@ export default function Text({
                   DragType.Drag === dragType
                     ? width - text.bottomRight.x + text.topLeft.x
                     : text.bottomRight.x,
-                  text.topLeft.x + e.pageX - offsetX
+                  text.topLeft.x + (e.pageX - offsetX) / scale
                 )
               ),
             }
@@ -109,7 +111,7 @@ export default function Text({
                   DragType.Drag === dragType
                     ? height - text.bottomRight.y + text.topLeft.y
                     : text.bottomRight.y,
-                  text.topLeft.y + e.pageY - offsetY
+                  text.topLeft.y + (e.pageY - offsetY) / scale
                 )
               ),
             }
@@ -127,7 +129,10 @@ export default function Text({
                 DragType.Drag === dragType
                   ? text.bottomRight.x - text.topLeft.x
                   : text.topLeft.x,
-                Math.min(width, text.bottomRight.x + e.pageX - offsetX)
+                Math.min(
+                  width,
+                  text.bottomRight.x + (e.pageX - offsetX) / scale
+                )
               ),
             }
           : {}),
@@ -141,7 +146,10 @@ export default function Text({
                 DragType.Drag === dragType
                   ? text.bottomRight.y - text.topLeft.y
                   : text.topLeft.y,
-                Math.min(height, text.bottomRight.y + e.pageY - offsetY)
+                Math.min(
+                  height,
+                  text.bottomRight.y + (e.pageY - offsetY) / scale
+                )
               ),
             }
           : {}),
@@ -157,8 +165,7 @@ export default function Text({
     window.removeEventListener("pointermove", onPointerMove);
   };
 
-  const onBoxClick = (e: MouseEvent) => {
-    e.stopPropagation();
+  const onBoxClick = () => {
     setActive(true);
   };
 
@@ -166,16 +173,6 @@ export default function Text({
     setActive(false);
     window.removeEventListener("mousedown", onClickOutside);
   };
-
-  useEffect(() => {
-    if (active) {
-      window.addEventListener("mousedown", onClickOutside);
-
-      return () => {
-        window.removeEventListener("mousedown", onClickOutside);
-      };
-    }
-  }, [active]);
 
   const handleToolbarChange = (styles: TemplateTextStyles) => {
     onChange({
@@ -187,79 +184,102 @@ export default function Text({
   const { shadowColor } = text.styles;
 
   return (
-    <Box position="absolute" top="0" left="0">
-      <div
-        onMouseDown={onBoxClick}
-        style={{
-          position: "absolute",
-          border:
-            active || !!dragType ? "1px dashed" : "1px dashed transparent",
-          left: text.topLeft.x,
-          top: text.topLeft.y,
-          width: text.bottomRight.x - text.topLeft.x,
-          height: text.bottomRight.y - text.topLeft.y,
-        }}
-      >
-        {(active || !!dragType) && (
-          <Toolbar
-            onChange={handleToolbarChange}
-            onDelete={onDelete}
-            {...text.styles}
-          />
-        )}
+    <ClickAwayListener mouseEvent="onMouseDown" onClickAway={onClickOutside}>
+      <Box position="absolute" top="0" left="0">
+        <Box sx={{ display: { sm: "block", md: "none" } }}>
+          {(active || !!dragType) && (
+            <Toolbar
+              fixed
+              onChange={handleToolbarChange}
+              onDelete={onDelete}
+              {...text.styles}
+            />
+          )}
+        </Box>
         <div
-          ref={innerRef}
-          contentEditable
-          onInput={handleTextChange}
-          suppressContentEditableWarning={true}
           style={{
-            width: text.bottomRight.x - text.topLeft.x,
-            height: text.bottomRight.y - text.topLeft.y,
-            fontSize: text.styles.fontSize,
-            fontFamily: text.styles.fontFamily,
-            textDecoration: text.styles.underline ? "underline" : "none",
-            fontWeight: text.styles.bold ? "bold" : "normal",
-            fontStyle: text.styles.italic ? "italic" : "normal",
-            color: text.styles.color,
-            textAlign: text.styles.textAlign,
-            lineHeight: 1.5,
-            marginLeft: 1,
-            textShadow: `${shadowColor} -1px 0px, ${shadowColor} 0px 1px, ${shadowColor} 1px 0px, ${shadowColor} 0px -1px`,
-            caretColor: "#4d90fe",
-            outline: "0px solid transparent",
-            userSelect: "none",
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
           }}
         >
-          {label}
-        </div>
+          <div
+            onMouseDown={onBoxClick}
+            style={{
+              position: "absolute",
+              border:
+                active || !!dragType ? "1px dashed" : "1px dashed transparent",
+              left: text.topLeft.x,
+              top: text.topLeft.y,
+              width: text.bottomRight.x - text.topLeft.x,
+              height: text.bottomRight.y - text.topLeft.y,
+            }}
+          >
+            <Box sx={{ display: { sm: "none", md: "block" } }}>
+              {(active || !!dragType) && (
+                <Toolbar
+                  scale={1 / scale}
+                  onChange={handleToolbarChange}
+                  onDelete={onDelete}
+                  {...text.styles}
+                />
+              )}
+            </Box>
 
-        <DragElements show={active || !!dragType}>
-          <DragBorder top onPointerDown={onPointerDown(DragType.Drag)} />
-          <DragBorder bottom onPointerDown={onPointerDown(DragType.Drag)} />
-          <DragBorder left onPointerDown={onPointerDown(DragType.Drag)} />
-          <DragBorder right onPointerDown={onPointerDown(DragType.Drag)} />
-          <ResizeButton
-            left
-            top
-            onPointerDown={onPointerDown(DragType.TopLeftResize)}
-          />
-          <ResizeButton
-            right
-            top
-            onPointerDown={onPointerDown(DragType.TopRightResize)}
-          />
-          <ResizeButton
-            left
-            bottom
-            onPointerDown={onPointerDown(DragType.BottomLeftResize)}
-          />
-          <ResizeButton
-            right
-            bottom
-            onPointerDown={onPointerDown(DragType.BottomRightResize)}
-          />
-        </DragElements>
-      </div>
-    </Box>
+            <div
+              ref={innerRef}
+              contentEditable
+              onInput={handleTextChange}
+              suppressContentEditableWarning={true}
+              style={{
+                width: text.bottomRight.x - text.topLeft.x,
+                height: text.bottomRight.y - text.topLeft.y,
+                fontSize: text.styles.fontSize,
+                fontFamily: text.styles.fontFamily,
+                textDecoration: text.styles.underline ? "underline" : "none",
+                fontWeight: text.styles.bold ? "bold" : "normal",
+                fontStyle: text.styles.italic ? "italic" : "normal",
+                color: text.styles.color,
+                textAlign: text.styles.textAlign,
+                lineHeight: 1.5,
+                marginLeft: 1,
+                textShadow: `${shadowColor} -1px 0px, ${shadowColor} 0px 1px, ${shadowColor} 1px 0px, ${shadowColor} 0px -1px`,
+                caretColor: "#4d90fe",
+                outline: "0px solid transparent",
+                userSelect: "none",
+              }}
+            >
+              {label}
+            </div>
+
+            <DragElements show={active || !!dragType}>
+              <DragBorder top onPointerDown={onPointerDown(DragType.Drag)} />
+              <DragBorder bottom onPointerDown={onPointerDown(DragType.Drag)} />
+              <DragBorder left onPointerDown={onPointerDown(DragType.Drag)} />
+              <DragBorder right onPointerDown={onPointerDown(DragType.Drag)} />
+              <ResizeButton
+                left
+                top
+                onPointerDown={onPointerDown(DragType.TopLeftResize)}
+              />
+              <ResizeButton
+                right
+                top
+                onPointerDown={onPointerDown(DragType.TopRightResize)}
+              />
+              <ResizeButton
+                left
+                bottom
+                onPointerDown={onPointerDown(DragType.BottomLeftResize)}
+              />
+              <ResizeButton
+                right
+                bottom
+                onPointerDown={onPointerDown(DragType.BottomRightResize)}
+              />
+            </DragElements>
+          </div>
+        </div>
+      </Box>
+    </ClickAwayListener>
   );
 }

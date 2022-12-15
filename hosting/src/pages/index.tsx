@@ -13,18 +13,18 @@ import { MemeModel } from "@shared/models/meme";
 
 export default function IndexPage() {
   const { templates, favourites, memes } = useContext(AppContext);
-  const [currentTemplate, setCurrentTemplate] = useState<TemplateModel | null>(
+  const [currentTemplateId, setCurrentTemplateId] = useState<string | null>(
     null
   );
   const [meme, setMeme] = useState<MemeModel | null>(null);
   const handleTemplateClick = (template: TemplateModel) => {
     setMeme(null);
-    setCurrentTemplate(template);
+    setCurrentTemplateId(template.id);
   };
 
   const handleMemeClick = (meme: MemeModel) => {
     setMeme(meme);
-    setCurrentTemplate(null);
+    setCurrentTemplateId(null);
   };
 
   const onMemeDeleted = () => {
@@ -69,7 +69,7 @@ export default function IndexPage() {
             },
           ]}
         />
-        <MemeCreator template={currentTemplate} />
+        <MemeCreator templateId={currentTemplateId} />
         {meme && <MemePreview meme={meme} onDeleted={onMemeDeleted} />}
       </CardContent>
     </Card>
