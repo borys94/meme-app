@@ -1,34 +1,24 @@
 import { styled } from "@mui/material/styles";
 
-interface ResizeButtonProps {
+interface DragBorderProps {
   left?: boolean;
   right?: boolean;
   top?: boolean;
   bottom?: boolean;
 }
 
-export const DragElements = styled("div")<{ show?: boolean }>(({ show }) => ({
-  display: show ? "block" : "none",
+export const ResizeButton = styled("div")(({ theme }) => ({
+  width: "50%",
+  height: "50%",
+  borderRadius: "50%",
+  transform: "translate(-50%, -50%)",
+  position: "absolute",
+  backgroundColor: theme.palette.primary.main,
 }));
-
-export const ResizeButton = styled("div")<ResizeButtonProps>(
-  ({ left, right, top, bottom, theme }) => ({
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    ...(left ? { left: -16 } : {}),
-    ...(right ? { right: -16 } : {}),
-    ...(bottom ? { bottom: -16 } : {}),
-    ...(top ? { top: -16 } : {}),
-    cursor: "pointer",
-    position: "absolute",
-    backgroundColor: theme.palette.primary.main,
-  })
-);
 
 const DRAG_BORDER_SIZE = 5;
 
-export const DragBorder = styled("div")<ResizeButtonProps>(
+export const DragBorder = styled("div")<DragBorderProps>(
   ({ left, right, top, bottom }) => ({
     ...(left
       ? {

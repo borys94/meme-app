@@ -10,7 +10,8 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { TemplateText, TemplateTextStyles } from "@shared/models/template";
 
 import Toolbar from "./Toolbar";
-import { DragElements, ResizeButton, DragBorder } from "./styles";
+import { DragBorder } from "./styles";
+import ResizeButton from "./ResizeButton";
 
 enum DragType {
   Drag = 1,
@@ -63,21 +64,45 @@ export default function Text({
     e.stopPropagation();
     e.preventDefault();
     setDragType(dragType);
+
     setOffsetX(e.pageX);
     setOffsetY(e.pageY);
   };
 
   useEffect(() => {
     if (offsetX !== null) {
-      window.addEventListener("pointerup", onPointerUp);
-      window.addEventListener("pointermove", onPointerMove);
+      if (navigator.maxTouchPoints > 0) {
+        window.addEventListener("touchend", onPointerUp, { passive: false });
+        window.addEventListener("touchmove", onPointerMove, { passive: false });
+      } else {
+        window.addEventListener("pointerup", onPointerUp, { passive: false });
+        window.addEventListener("pointermove", onPointerMove, {
+          passive: false,
+        });
+      }
     } else {
-      window.removeEventListener("pointerup", onPointerUp);
-      window.removeEventListener("pointermove", onPointerMove);
+      if (navigator.maxTouchPoints > 0) {
+        window.removeEventListener("touchend", onPointerUp);
+        window.removeEventListener("touchmove", onPointerMove);
+      } else {
+        window.removeEventListener("pointerup", onPointerUp);
+        window.removeEventListener("pointermove", onPointerMove);
+      }
     }
   }, [offsetX]);
 
-  const onPointerMove = (e: PointerEvent) => {
+  const onPointerMove = (e: PointerEvent | TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    let pageX, pageY;
+    if (e instanceof TouchEvent) {
+      pageX = e.changedTouches[0].pageX;
+      pageY = e.changedTouches[0].pageY;
+    } else {
+      pageX = e.pageX;
+      pageY = e.pageY;
+    }
+
     onChange({
       ...text,
       topLeft: {
@@ -94,7 +119,7 @@ export default function Text({
                   DragType.Drag === dragType
                     ? width - text.bottomRight.x + text.topLeft.x
                     : text.bottomRight.x,
-                  text.topLeft.x + (e.pageX - offsetX) / scale
+                  text.topLeft.x + (pageX - offsetX) / scale
                 )
               ),
             }
@@ -111,7 +136,7 @@ export default function Text({
                   DragType.Drag === dragType
                     ? height - text.bottomRight.y + text.topLeft.y
                     : text.bottomRight.y,
-                  text.topLeft.y + (e.pageY - offsetY) / scale
+                  text.topLeft.y + (pageY - offsetY) / scale
                 )
               ),
             }
@@ -129,10 +154,7 @@ export default function Text({
                 DragType.Drag === dragType
                   ? text.bottomRight.x - text.topLeft.x
                   : text.topLeft.x,
-                Math.min(
-                  width,
-                  text.bottomRight.x + (e.pageX - offsetX) / scale
-                )
+                Math.min(width, text.bottomRight.x + (pageX - offsetX) / scale)
               ),
             }
           : {}),
@@ -146,10 +168,7 @@ export default function Text({
                 DragType.Drag === dragType
                   ? text.bottomRight.y - text.topLeft.y
                   : text.topLeft.y,
-                Math.min(
-                  height,
-                  text.bottomRight.y + (e.pageY - offsetY) / scale
-                )
+                Math.min(height, text.bottomRight.y + (pageY - offsetY) / scale)
               ),
             }
           : {}),
@@ -161,8 +180,12 @@ export default function Text({
     setOffsetX(null);
     setOffsetY(null);
     setDragType(null);
+
     window.removeEventListener("pointerup", onPointerUp);
     window.removeEventListener("pointermove", onPointerMove);
+
+    window.removeEventListener("touchmove", onPointerMove);
+    window.removeEventListener("touchend", onPointerUp);
   };
 
   const onBoxClick = () => {
@@ -185,8 +208,15 @@ export default function Text({
 
   return (
     <ClickAwayListener mouseEvent="onMouseDown" onClickAway={onClickOutside}>
-      <Box position="absolute" top="0" left="0">
-        <Box sx={{ display: { sm: "block", md: "none" } }}>
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        sx={{
+          zIndex: active ? 10 : 0,
+        }}
+      >
+        <Box sx={{ display: { xs: "block", md: "none" } }}>
           {(active || !!dragType) && (
             <Toolbar
               fixed
@@ -206,15 +236,14 @@ export default function Text({
             onMouseDown={onBoxClick}
             style={{
               position: "absolute",
-              border:
-                active || !!dragType ? "1px dashed" : "1px dashed transparent",
+              border: active ? "1px dashed" : "1px dashed transparent",
               left: text.topLeft.x,
               top: text.topLeft.y,
               width: text.bottomRight.x - text.topLeft.x,
               height: text.bottomRight.y - text.topLeft.y,
             }}
           >
-            <Box sx={{ display: { sm: "none", md: "block" } }}>
+            <Box sx={{ display: { xs: "none", md: "block" } }}>
               {(active || !!dragType) && (
                 <Toolbar
                   scale={1 / scale}
@@ -224,7 +253,6 @@ export default function Text({
                 />
               )}
             </Box>
-
             <div
               ref={innerRef}
               contentEditable
@@ -250,33 +278,44 @@ export default function Text({
             >
               {label}
             </div>
-
-            <DragElements show={active || !!dragType}>
-              <DragBorder top onPointerDown={onPointerDown(DragType.Drag)} />
-              <DragBorder bottom onPointerDown={onPointerDown(DragType.Drag)} />
-              <DragBorder left onPointerDown={onPointerDown(DragType.Drag)} />
-              <DragBorder right onPointerDown={onPointerDown(DragType.Drag)} />
-              <ResizeButton
-                left
-                top
-                onPointerDown={onPointerDown(DragType.TopLeftResize)}
-              />
-              <ResizeButton
-                right
-                top
-                onPointerDown={onPointerDown(DragType.TopRightResize)}
-              />
-              <ResizeButton
-                left
-                bottom
-                onPointerDown={onPointerDown(DragType.BottomLeftResize)}
-              />
-              <ResizeButton
-                right
-                bottom
-                onPointerDown={onPointerDown(DragType.BottomRightResize)}
-              />
-            </DragElements>
+            {active && (
+              <Box>
+                <DragBorder top onPointerDown={onPointerDown(DragType.Drag)} />
+                <DragBorder
+                  bottom
+                  onPointerDown={onPointerDown(DragType.Drag)}
+                />
+                <DragBorder left onPointerDown={onPointerDown(DragType.Drag)} />
+                <DragBorder
+                  right
+                  onPointerDown={onPointerDown(DragType.Drag)}
+                />
+                <ResizeButton
+                  left
+                  top
+                  scale={scale}
+                  onPointerDown={onPointerDown(DragType.TopLeftResize)}
+                />
+                <ResizeButton
+                  right
+                  top
+                  scale={scale}
+                  onPointerDown={onPointerDown(DragType.TopRightResize)}
+                />
+                <ResizeButton
+                  left
+                  bottom
+                  scale={scale}
+                  onPointerDown={onPointerDown(DragType.BottomLeftResize)}
+                />
+                <ResizeButton
+                  right
+                  bottom
+                  scale={scale}
+                  onPointerDown={onPointerDown(DragType.BottomRightResize)}
+                />
+              </Box>
+            )}
           </div>
         </div>
       </Box>

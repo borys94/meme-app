@@ -65,7 +65,7 @@ export default function TemplatesTable() {
         </Button>
       </Stack>
 
-      <Stack direction="row" marginTop={3} gap={2}>
+      <Stack direction="row" marginTop={3} gap={2} overflow="auto">
         {templates?.map((template) => (
           <Box
             position="relative"
