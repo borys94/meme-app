@@ -3,12 +3,7 @@ export interface UserModel {
   email: string;
   createdAt: number;
   role: USER_ROLES;
-  avatar: Avatar | null;
-}
-
-interface Avatar {
-  url: string;
-  id: string;
+  avatar: string | null;
 }
 
 export enum USER_ROLES {
