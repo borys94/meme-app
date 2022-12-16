@@ -2,7 +2,8 @@ import express, {Request, Response} from "express";
 
 import firebase from "../../services/firebaseService";
 import {COLLECTIONS} from "../../../../shared/models/collections";
-import {deletePublicFileByUrl} from "../../utils/deletePublicFile";
+import {deleteFile} from "../../services/storageService";
+
 // eslint-disable-next-line
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.delete("/:id/memes/:memeId", async function(req: Request, res: Response) 
     throw new Error();
   }
   await meme.delete();
-  await deletePublicFileByUrl(memeData.url);
+  await deleteFile(memeData.url);
   res.status(200).send({
     data: "",
   });

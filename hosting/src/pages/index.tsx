@@ -40,6 +40,7 @@ export default function IndexPage() {
               label: "Popular",
               render: () => (
                 <TemplatesList
+                  isLoading={!templates.length}
                   elements={templates}
                   handleElementClick={handleTemplateClick}
                 />
