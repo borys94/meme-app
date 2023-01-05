@@ -4,11 +4,13 @@ import firebase from "../../../services/firebaseService";
 import {createFile} from "../../../services/storageService";
 import {COLLECTIONS} from "../../../../../shared/models/collections";
 import {TemplateModel} from "../../../../../shared/models/template";
+import {validateRequest} from "../../../middlewares";
+import {addTemplateValidator} from "../../../validators";
 
 // eslint-disable-next-line
 const router = express.Router();
 
-router.post("/", async function(req: Request, res: Response) {
+router.post("/", validateRequest(addTemplateValidator), async function(req: Request, res: Response) {
   const {image, title, status} = req.body;
   const url = await createFile(image, "templates");
 

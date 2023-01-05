@@ -17,11 +17,11 @@ it("fail when not logged user wants to create a template", async () => {
 });
 
 it("fail when not admin wants to create a template", async () => {
-  await createUser("email", "id");
+  const userId = await createUser("userEmail");
 
   await request(app)
       .post("/admin/templates")
-      .set("Token", "id")
+      .set("Token", userId)
       .send({
         image: "base64image",
         title: "title",
@@ -33,12 +33,27 @@ it("fail when not admin wants to create a template", async () => {
   expect(templates.length).toBe(0);
 });
 
+it("fail when data is not completed", async () => {
+  const adminId = await createAdminUser("adminEmail");
+
+  await request(app)
+      .post("/admin/templates")
+      .set("Token", adminId)
+      .send({
+        image: "base64image",
+      }).expect(400);
+
+  const snap = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).get();
+  const templates = firestoreService.getDocsWithID<TemplateModel>(snap);
+  expect(templates.length).toBe(0);
+});
+
 it("success when created a template", async () => {
-  await createAdminUser("email", "adminId");
+  const adminId = await createAdminUser("adminEmail");
 
   const response = await request(app)
       .post("/admin/templates")
-      .set("Token", "adminId")
+      .set("Token", adminId)
       .send({
         image: "base64image",
         title: "title",

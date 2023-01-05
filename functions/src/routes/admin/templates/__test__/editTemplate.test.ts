@@ -17,16 +17,18 @@ it("fail when not logged user wants to edit a template", async () => {
 });
 
 it("fail when not admin wants to edit a template", async () => {
-  await createUser("email", "id");
-  await createAdminUser("email", "adminId");
+  const userId = await createUser("userEmail");
+  const adminId = await createAdminUser("adminEmail");
 
-  const templateId = await createTemplate("adminId");
+  const templateId = await createTemplate(adminId);
 
   await request(app)
       .put(`/admin/templates/${templateId}`)
-      .set("Token", "id")
+      .set("Token", userId)
       .send({
+        image: "base64image",
         title: "new title",
+        status: TEMPLATE_STATUS.PUBLISHED,
       }).expect(401);
 
   const snap = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).doc(templateId).get();
@@ -34,15 +36,33 @@ it("fail when not admin wants to edit a template", async () => {
   expect(template.title).toBe("title");
 });
 
-it("success when edited a template", async () => {
-  await createUser("email", "id");
-  await createAdminUser("email", "adminId");
+it("fail when sent data is not completed", async () => {
+  await createUser("userEmail");
+  const adminId = await createAdminUser("adminEmail");
 
-  const templateId = await createTemplate("adminId");
+  const templateId = await createTemplate(adminId);
 
   await request(app)
       .put(`/admin/templates/${templateId}`)
-      .set("Token", "adminId")
+      .set("Token", adminId)
+      .send({
+        title: "new title",
+      }).expect(400);
+
+  const snap = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).doc(templateId).get();
+  const template = firestoreService.getDocWithID<TemplateModel>(snap);
+  expect(template.title).toBe("title");
+});
+
+it("success when edited a template", async () => {
+  await createUser("userEmail");
+  const adminId = await createAdminUser("adminEmail");
+
+  const templateId = await createTemplate(adminId);
+
+  await request(app)
+      .put(`/admin/templates/${templateId}`)
+      .set("Token", adminId)
       .send({
         title: "new title",
         texts: "",
