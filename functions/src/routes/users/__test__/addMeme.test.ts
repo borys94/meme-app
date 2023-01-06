@@ -16,7 +16,7 @@ it("fail when not logged user wants to add a favourite meme", async () => {
 });
 
 it("fail when data is missing", async () => {
-  const userId = await createUser("userEmail");
+  const userId = await createUser();
 
   await request(app)
       .post(`/users/${userId}/memes`)
@@ -31,9 +31,9 @@ it("fail when data is missing", async () => {
 });
 
 it("fail when tries add meme to other user", async () => {
-  const adminId = await createAdminUser("adminEmail");
-  const userId = await createUser("userEmail");
-  const userId2 = await createUser("userEmail2");
+  const adminId = await createAdminUser();
+  const userId = await createUser();
+  const userId2 = await createUser();
   const templateId = await createTemplate(adminId);
 
   await request(app)
@@ -52,7 +52,7 @@ it("fail when tries add meme to other user", async () => {
 });
 
 it("fail when meme does not exist", async () => {
-  const userId = await createUser("userEmail");
+  const userId = await createUser();
 
   const response = await request(app)
       .post(`/users/${userId}/memes`)
@@ -71,8 +71,8 @@ it("fail when meme does not exist", async () => {
 });
 
 it("success when add meme to user", async () => {
-  const adminId = await createAdminUser("adminEmail");
-  const userId = await createUser("userEmail");
+  const adminId = await createAdminUser();
+  const userId = await createUser();
   const templateId = await createTemplate(adminId);
 
   await request(app)

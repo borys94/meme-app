@@ -17,8 +17,8 @@ it("fail when not logged user wants to edit a template", async () => {
 });
 
 it("fail when not admin wants to edit a template", async () => {
-  const userId = await createUser("userEmail");
-  const adminId = await createAdminUser("adminEmail");
+  const userId = await createUser();
+  const adminId = await createAdminUser();
 
   const templateId = await createTemplate(adminId);
 
@@ -37,8 +37,8 @@ it("fail when not admin wants to edit a template", async () => {
 });
 
 it("fail when sent data is not completed", async () => {
-  await createUser("userEmail");
-  const adminId = await createAdminUser("adminEmail");
+  await createUser();
+  const adminId = await createAdminUser();
 
   const templateId = await createTemplate(adminId);
 
@@ -55,8 +55,8 @@ it("fail when sent data is not completed", async () => {
 });
 
 it("success when edited a template", async () => {
-  await createUser("userEmail");
-  const adminId = await createAdminUser("adminEmail");
+  await createUser();
+  const adminId = await createAdminUser();
 
   const templateId = await createTemplate(adminId);
 

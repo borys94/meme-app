@@ -13,7 +13,8 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "jest ./src --watchAll"
+    "test-watch": "jest ./src --watchAll --maxWorkers=1 --testTimeout=15000",
+    "test": "npm run build && npm run develop:emulators & jest ./src --maxWorkers=1 --testTimeout=60000"
   },
   "engines": {
     "node": "16"

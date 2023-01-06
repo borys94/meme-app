@@ -17,7 +17,7 @@ it("fail when not logged user wants to create a template", async () => {
 });
 
 it("fail when not admin wants to create a template", async () => {
-  const userId = await createUser("userEmail");
+  const userId = await createUser();
 
   await request(app)
       .post("/admin/templates")
@@ -34,7 +34,7 @@ it("fail when not admin wants to create a template", async () => {
 });
 
 it("fail when data is not completed", async () => {
-  const adminId = await createAdminUser("adminEmail");
+  const adminId = await createAdminUser();
 
   await request(app)
       .post("/admin/templates")
@@ -49,7 +49,7 @@ it("fail when data is not completed", async () => {
 });
 
 it("success when created a template", async () => {
-  const adminId = await createAdminUser("adminEmail");
+  const adminId = await createAdminUser();
 
   const response = await request(app)
       .post("/admin/templates")
@@ -58,7 +58,7 @@ it("success when created a template", async () => {
         image: "base64image",
         title: "title",
         status: TEMPLATE_STATUS.PUBLISHED,
-      }).expect(200);
+      }).expect(201);
 
   const snap = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).doc(response.body.data).get();
   const template = firestoreService.getDocWithID<TemplateModel>(snap);

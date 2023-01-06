@@ -1,31 +1,25 @@
 import express, {Request, Response} from "express";
 
-import firebase from "../../../services/firebaseService";
+import queryService from "../../../services/queryService";
 import {createFile} from "../../../services/storageService";
-import {COLLECTIONS} from "../../../../../shared/models/collections";
-import {TemplateModel} from "../../../../../shared/models/template";
 import {validateRequest} from "../../../middlewares";
 import {addTemplateValidator} from "../../../validators";
 
 // eslint-disable-next-line
 const router = express.Router();
 
-router.post("/", validateRequest(addTemplateValidator), async function(req: Request, res: Response) {
-  const {image, title, status} = req.body;
-  const url = await createFile(image, "templates");
+router.post(
+    "/",
+    validateRequest(addTemplateValidator),
+    async function(req: Request, res: Response) {
+      const {image, title, status} = req.body;
+      const url = await createFile(image, "templates");
+      const {id} = await queryService.addTemplate(title, url, status);
 
-  const template: Omit<TemplateModel, "id"> = {
-    title,
-    url,
-    status,
-    likes: 0,
-    texts: [],
-    createdAt: Date.now(),
-  };
-  const {id} = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).add(template);
-  res.status(200).send({
-    data: id,
-  });
-});
+      res.status(201).send({
+        data: id,
+      });
+    }
+);
 
 export {router as addTemplateRouter};

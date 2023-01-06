@@ -1,33 +1,29 @@
 import express, {Request, Response} from "express";
-import {FieldValue} from "firebase-admin/firestore";
 
-import firebase from "../../services/firebaseService";
-import {COLLECTIONS} from "../../../../shared/models/collections";
-import {NotAuthorizedError, NotFoundError} from "../../errors";
+import {BadRequestError, NotAuthorizedError, NotFoundError} from "../../errors";
 import {validateRequest} from "../../middlewares";
 import {addFavouriteValidator} from "../../validators";
+import queryService from "../../services/queryService";
 
 // eslint-disable-next-line
 const router = express.Router();
 
-router.post("/:id/favourites", validateRequest(addFavouriteValidator), async function(req: Request, res: Response) {
-  if (req.currentUser!.id !== req.params.id) {
+router.post("/:userId/favourites", validateRequest(addFavouriteValidator), async function(req: Request, res: Response) {
+  const {templateId} = req.body;
+  const {userId} = req.params;
+  if (req.currentUser!.id !== userId) {
     throw new NotAuthorizedError();
   }
-  const {templateId} = req.body;
-  const template = await firebase.firestore.collection(COLLECTIONS.TEMPLATES).doc(templateId);
-  const data = (await template.get()).data();
-  if (!data) {
+  if (await queryService.getUserFavourite(userId, templateId)) {
+    throw new BadRequestError("You already like this template");
+  }
+
+  const template = await queryService.getTemplate(templateId);
+  if (!template) {
     throw new NotFoundError("Template not found");
   }
 
-  await firebase.firestore.collection(COLLECTIONS.USERS).doc(req.currentUser!.id!)
-      .collection(COLLECTIONS.FAVOURITES).doc(templateId).set({
-        ...data,
-      });
-  await template.update({
-    likes: FieldValue.increment(1),
-  });
+  await queryService.addFavouriteToUser(userId, templateId);
   res.sendStatus(201);
 });
 

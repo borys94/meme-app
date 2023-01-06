@@ -7,16 +7,17 @@ import {UserModel, USER_ROLES} from "../../../shared/models/user";
 import {app} from "../app";
 import {TEMPLATE_STATUS} from "../../../shared/models/template";
 
-export const createAdminUser = async (email: string) => {
-  return createFirestoreUser(email, USER_ROLES.ADMIN);
+export const createAdminUser = async () => {
+  return createFirestoreUser(USER_ROLES.ADMIN);
 };
 
-export const createUser = async (email: string) => {
-  return createFirestoreUser(email, USER_ROLES.USER);
+export const createUser = async () => {
+  return createFirestoreUser(USER_ROLES.USER);
 };
 
-const createFirestoreUser = async (email: string, role: USER_ROLES) => {
+const createFirestoreUser = async (role: USER_ROLES) => {
   const id = crypto.randomUUID();
+  const email = crypto.randomUUID();
   const firestoreUser: UserModel = {
     email,
     id,
@@ -36,6 +37,27 @@ export const createTemplate = async (token: string): Promise<string> => {
         image: "base64image",
         title: "title",
         status: TEMPLATE_STATUS.PUBLISHED,
+      });
+  return response.body.data;
+};
+
+export const addFavourite = async (userId: string, templateId: string): Promise<string> => {
+  const response = await request(app)
+      .post(`/users/${userId}/favourites`)
+      .set("Token", userId)
+      .send({
+        templateId,
+      });
+  return response.body.data;
+};
+
+export const addMeme = async (userId: string, templateId: string): Promise<string> => {
+  const response = await request(app)
+      .post(`/users/${userId}/memes`)
+      .set("Token", userId)
+      .send({
+        templateId,
+        image: "image",
       });
   return response.body.data;
 };

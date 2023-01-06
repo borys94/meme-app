@@ -15,7 +15,7 @@ it("fail when not logged user wants to update user role", async () => {
 });
 
 it("fail when not admin wants to update user role", async () => {
-  const userId = await createUser("userEmail");
+  const userId = await createUser();
 
   await request(app)
       .put(`/admin/users/${userId}`)
@@ -30,8 +30,8 @@ it("fail when not admin wants to update user role", async () => {
 });
 
 it("fail when data is missing", async () => {
-  const userId = await createUser("userEmail");
-  const adminId = await createAdminUser("adminEmail");
+  const userId = await createUser();
+  const adminId = await createAdminUser();
 
   await request(app)
       .put(`/admin/users/${userId}`)
@@ -45,8 +45,8 @@ it("fail when data is missing", async () => {
 });
 
 it("fail when userRole is wrong", async () => {
-  const userId = await createUser("userEmail");
-  const adminId = await createAdminUser("adminEmail");
+  const userId = await createUser();
+  const adminId = await createAdminUser();
 
   await request(app)
       .put(`/admin/users/${userId}`)
@@ -62,8 +62,8 @@ it("fail when userRole is wrong", async () => {
 });
 
 it("success when updated user role", async () => {
-  const userId = await createUser("userEmail");
-  const adminId = await createAdminUser("adminEmail");
+  const userId = await createUser();
+  const adminId = await createAdminUser();
 
   await request(app)
       .put(`/admin/users/${userId}`)
